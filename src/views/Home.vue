@@ -4,7 +4,7 @@
       <img alt="Vue logo" src="../assets/logo.png" style="width: 100%" v-if="mobileStatus"/>
     </div>
     <div>
-      <h1>欢迎来到岛民岛</h1>
+      <div style="font-size: 40px; color: #63acb5">欢迎来到岛民岛</div>
       <p>
         这里是岛民岛，就跟字面意思一样，是属于岛民的岛。<br />
         这里没有红名，所有岛民拥有相同的权力（如果说直接通过修改数据库去权限的话，还是有一个红名的）。<br />
