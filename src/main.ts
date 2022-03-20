@@ -10,15 +10,16 @@ import axios from './http'
 const app = createApp(App)
 app.config.globalProperties.$axios = axios
 
-app
-    .use(store)
-    .use(router)
-    .use(ElementPlus)
-    .mount('#app')
-
 for (const iconName in ElIconModules) {
     if (Reflect.has(ElIconModules, iconName)) {
         const item = ElIconModules[iconName]
         app.component(iconName, item)
     }
 }
+
+app
+    .use(store)
+    .use(router)
+    .use(ElementPlus)
+    .mount('#app')
+

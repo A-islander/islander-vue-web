@@ -4,6 +4,13 @@ import store from './store'
 
 let loading: any
 
+const loadingStr = ['k3u7DKB说：wssbhhhaaaaaaaaaaaaaaaaaaaaaaa'];
+
+let getLoadingStr = () => {
+    let index = Math.floor((Math.random() * loadingStr.length));
+    return loadingStr[index];
+}
+
 const startLoading = () => {
     interface Options {
         lock: boolean;
@@ -11,7 +18,7 @@ const startLoading = () => {
     }
     const options: Options = {
         lock: true,
-        text: "加载中",
+        text: getLoadingStr(),
     }
     loading = ElLoading.service(options)
 }

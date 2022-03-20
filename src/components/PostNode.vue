@@ -5,13 +5,15 @@
         <div class="card-header">
           <el-row :gutter="20">
             <el-col :span="12">
-              <span
-                >{{
+              <span>
+                {{
                   new Date(parseInt(postNode.time) * 1000)
                     .toLocaleString()
                     .replace(/:\d{1,2}$/, " ")
-                }}<br />{{ postNode.name }}</span
-              >
+                }}
+                <br />
+                {{ postNode.name }}
+              </span>
             </el-col>
             <el-col :span="4" :offset="8" style="text-align: right">
               <span>No.{{ postNode.id }}</span>
@@ -20,11 +22,11 @@
         </div>
       </template>
       <div class="text item" style="white-space: pre-wrap">
-        <div class="grid-content bg-purple">
-          {{ postNode.value }}
-        </div>
-        <div style="text-align: right">
-          <el-icon :size="20" :color="'#63acb5'"><edit /></el-icon>
+        <div v-html="textMiddleware(postNode.value)"></div>
+        <div style="text-align: right; font-size: 10px; color: #63acb5">
+          <div @click="sageAdd()">支持SAGE：{{ postNode.sageAddCount }}</div>
+          <div>反对SAGE：{{ postNode.sageSubCount }}</div>
+          <!-- <el-icon :size="20" :color="'#63acb5'"><edit /></el-icon> -->
         </div>
       </div>
       <div
@@ -44,9 +46,23 @@ export default defineComponent({
   props: {
     postNode: Object,
   },
+
   setup(props) {
+    let sageAdd = () => {
+      console.log("ok");
+    };
+    let textMiddleware = (text: string) => {
+      let reg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-)+)/g;
+      text = text.replace(
+        reg,
+        "<a href='$1$2' target='_blank' style='color: #63acb5;'>地址</a>"
+      );
+      return text;
+    };
     return {
       ...toRefs(props),
+      textMiddleware,
+      sageAdd,
     };
   },
 });

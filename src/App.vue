@@ -11,7 +11,7 @@
         >
           <el-sub-menu
             index="plate"
-            style="color: #63acb5;"
+            style="color: #63acb5"
             v-if="!mobileStatus"
           >
             <template #title>
@@ -42,7 +42,7 @@
         </el-menu>
       </el-header>
     </el-affix>
-    <el-container class="body-container">
+    <el-container :class="bodyStyle">
       <el-aside width="200px" v-if="mobileStatus">
         <el-menu
           default-active="2"
@@ -50,7 +50,7 @@
           :collapse="false"
         >
           <div>
-            <img alt="Vue logo" src="./assets/logo.png" style="width: 100%" />
+            <img alt="Vue logo" src="https://s3.bmp.ovh/imgs/2022/03/7898d4008b6154e2.png" style="width: 100%" />
           </div>
           <router-link to="/">
             <el-menu-item index="1" style="color: #63acb5">
@@ -75,6 +75,24 @@
               </router-link>
             </div>
           </el-sub-menu>
+          <a href="https://github.com/A-islander/post-backup" target="_blank">
+            <el-menu-item index="3" style="color: #63acb5">
+              <el-icon><location /></el-icon>
+              <div>串备份地址</div>
+            </el-menu-item>
+          </a>
+          <a href="https://docs.apipost.cn/preview/b58077f3ebc9caeb/6a197cc600cf6f5c" target="_blank">
+            <el-menu-item index="4" style="color: #63acb5">
+              <el-icon><location /></el-icon>
+              <div>接口文档</div>
+            </el-menu-item>
+          </a>
+          <a href="http://bog.ac" target="_blank">
+            <el-menu-item index="5" style="color: #63acb5">
+              <el-icon><location /></el-icon>
+              <div>bog岛</div>
+            </el-menu-item>
+          </a>
         </el-menu>
       </el-aside>
       <el-main>
@@ -91,9 +109,13 @@ import store from "./store";
 export default {
   setup() {
     let width = document.body.clientWidth;
+    let bodyStyle = ref('')
     let mobileStatus = ref(false);
     if (width > 1024) {
       mobileStatus.value = true;
+      bodyStyle = ref('body-container')
+    } else {
+      bodyStyle = ref('body-container-mobile')
     }
     let cookieName = ref(store.getters.getName);
     if (cookieName.value == "" || cookieName.value == null) {
@@ -123,6 +145,7 @@ export default {
       activeIndex,
       cookieName,
       mobileStatus,
+      bodyStyle,
     };
   },
 };
@@ -132,20 +155,23 @@ export default {
 html,
 body,
 #app {
-  /* width: 90%;
+  width: 100%;
   height: 100%;
   margin: 0 auto;
-  text-align: center;
-  background-color: #374954; */
 }
 
 .body-container {
-  width: 90%;
+  width: 80%;
   height: 100%;
   margin: 0 auto;
-  /* text-align: center; */
-  /* background-color: #374954; */
 }
+
+.body-container-mobile {
+  width: 95%;
+  height: 100%;
+  margin: 0 auto;
+}
+
 .router-link-active {
   text-decoration: none;
   color: black;

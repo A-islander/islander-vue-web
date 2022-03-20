@@ -1,7 +1,10 @@
 <template>
   <div style="border: 10px solid white">
-    <div style="font-size: 40px; color: #63acb5">
-      {{ plateName }}
+    <div style="font-size: 40px; color: #63acb5; margin-bottom: 5px">
+      {{ plateData.name }}
+    </div>
+    <div style="font-size: 20px; color: #63acb5; margin-bottom: 5px">
+      {{ plateData.value }}
     </div>
     <el-input
       v-model="postInput.value"
@@ -28,6 +31,15 @@
       </router-link>
     </div>
   </div>
+  <div>
+    <el-pagination
+      layout="prev, pager, next"
+      :page-size="pageRes.size"
+      :page-count="Math.ceil(res.count / pageRes.size)"
+      :hide-on-single-page="Math.ceil(res.count / pageRes.size) == 1"
+      v-model:current-page="pageRes.page"
+    ></el-pagination>
+  </div>
 </template>
 <script lang="ts">
 import axios from "axios";
@@ -46,10 +58,17 @@ export default defineComponent({
       title: "",
     });
     let plateId = ref();
-    let plateName = ref();
+    let plateData = reactive({
+      name: "",
+      value: "",
+    });
     let res = reactive({
       list: [],
       count: 0,
+    });
+    let pageRes = reactive({
+      page: 1,
+      size: 20,
     });
     let getIndex = (plateId: number, page: number, size: number) => {
       axios
@@ -59,6 +78,7 @@ export default defineComponent({
         .then((response) => {
           res.list = response.data.data.list;
           res.count = response.data.data.count;
+          window.scrollTo(0, 0);
         });
     };
     let postForumPost = (plateId: number, value: string, title: string) => {
@@ -73,9 +93,8 @@ export default defineComponent({
           mediaUrl: "",
         })
         .then((response) => {
-          console.log(response);
           if (response.data.code == 200) {
-            getIndex(plateId, 0, 10);
+            getIndex(plateId, pageRes.page - 1, pageRes.size);
           } else {
             alert("请领取饼干");
           }
@@ -85,20 +104,27 @@ export default defineComponent({
     };
     const route = useRoute();
     plateId.value = route.params.plateId;
-    getIndex(plateId.value, 0, 10);
+    getIndex(plateId.value, pageRes.page - 1, pageRes.size);
     watch(plateId, () => {
-      getIndex(plateId.value, 0, 10);
+      pageRes.page = 1;
+      getIndex(plateId.value, pageRes.page - 1, pageRes.size);
+    });
+    watch(pageRes, () => {
+      getIndex(plateId.value, pageRes.page - 1, pageRes.size);
     });
     onUpdated(() => {
       plateId.value = route.params.plateId;
-      plateName.value = store.getters.getPlateName(Number(plateId.value));
+      let data = store.getters.getPlateData(Number(plateId.value));
+      plateData.name = data.name;
+      plateData.value = data.value;
     });
     return {
       plateId,
       res,
       postInput,
       postForumPost,
-      plateName,
+      pageRes,
+      plateData,
     };
   },
 });

@@ -23,6 +23,13 @@ export default createStore({
           return state.plate[i]["name"]
         }
       }
+    },
+    getPlateData: (state) => (id:number) => {
+      for (let i = 0; i < state.plate.length; i++) {
+        if (state.plate[i]["id"] == id) {
+          return state.plate[i]
+        }
+      }
     }
   },
   mutations: {
