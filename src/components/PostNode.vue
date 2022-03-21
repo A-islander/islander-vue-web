@@ -52,7 +52,11 @@ export default defineComponent({
       console.log("ok");
     };
     let textMiddleware = (text: string) => {
-      let reg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-)+)/g;
+      let reg = /</g;
+      text = text.replace(reg, "&lt;");
+      reg = />/g;
+      text = text.replace(reg, "&gt;");
+      reg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-)+)/g;
       text = text.replace(
         reg,
         "<a href='$1$2' target='_blank' style='color: #63acb5;'>地址</a>"
