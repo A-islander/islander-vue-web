@@ -6,11 +6,7 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <span>
-                {{
-                  new Date(parseInt(postNode.time) * 1000)
-                    .toLocaleString()
-                    .replace(/:\d{1,2}$/, " ")
-                }}
+                {{ timeMiddleware(postNode.time) }}
                 <br />
                 {{ postNode.name }}
               </span>
@@ -22,7 +18,8 @@
         </div>
       </template>
       <div class="text item" style="white-space: pre-wrap">
-        <div v-html="textMiddleware(postNode.value)"></div>
+        <!-- <div v-html="textMiddleware(postNode.value)"></div> -->
+        <PostText :text="postNode.value" />
         <div style="text-align: right; font-size: 10px; color: #63acb5">
           <div @click="sageAdd()">支持SAGE：{{ postNode.sageAddCount }}</div>
           <div>反对SAGE：{{ postNode.sageSubCount }}</div>
@@ -41,32 +38,28 @@
 </template>
 <script lang="ts">
 import { defineComponent, toRefs } from "vue";
+import PostText from "./PostText.vue";
 
 export default defineComponent({
+  components: {
+    PostText,
+  },
   props: {
     postNode: Object,
   },
-
   setup(props) {
     let sageAdd = () => {
       console.log("ok");
     };
-    let textMiddleware = (text: string) => {
-      let reg = /</g;
-      text = text.replace(reg, "&lt;");
-      reg = />/g;
-      text = text.replace(reg, "&gt;");
-      reg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-)+)/g;
-      text = text.replace(
-        reg,
-        "<a href='$1$2' target='_blank' style='color: #63acb5;'>地址</a>"
-      );
-      return text;
+    let timeMiddleware = (time: string) => {
+      return new Date(parseInt(time) * 1000)
+        .toLocaleString()
+        .replace(/:\d{1,2}$/, " ");
     };
     return {
       ...toRefs(props),
-      textMiddleware,
       sageAdd,
+      timeMiddleware,
     };
   },
 });
