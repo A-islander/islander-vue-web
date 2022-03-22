@@ -18,7 +18,7 @@
         </div>
       </template>
       <div class="text item" style="white-space: pre-wrap">
-        <!-- <div v-html="textMiddleware(postNode.value)"></div> -->
+        <!-- <div>{{ postNode.value }}</div> -->
         <PostText :text="postNode.value" />
         <div style="text-align: right; font-size: 10px; color: #63acb5">
           <div @click="sageAdd()">支持SAGE：{{ postNode.sageAddCount }}</div>
@@ -37,10 +37,12 @@
   </div>
 </template>
 <script lang="ts">
+import axios from "axios";
 import { defineComponent, toRefs } from "vue";
 import PostText from "./PostText.vue";
 
 export default defineComponent({
+  name: "PostNode",
   components: {
     PostText,
   },
@@ -48,6 +50,11 @@ export default defineComponent({
     postNode: Object,
   },
   setup(props) {
+    let getPostNode = (postId: number) => {
+      axios.get("forum/get?postId="+postId).then((response) => {
+        console.log(response.data.data)
+      })
+    }
     let sageAdd = () => {
       console.log("ok");
     };
@@ -56,6 +63,7 @@ export default defineComponent({
         .toLocaleString()
         .replace(/:\d{1,2}$/, " ");
     };
+    getPostNode(123)
     return {
       ...toRefs(props),
       sageAdd,
