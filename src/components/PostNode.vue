@@ -51,10 +51,10 @@ export default defineComponent({
   },
   setup(props) {
     let getPostNode = (postId: number) => {
-      axios.get("forum/get?postId="+postId).then((response) => {
-        console.log(response.data.data)
-      })
-    }
+      axios.get("forum/get?postId=" + postId).then((response) => {
+        console.log(response.data.data);
+      });
+    };
     let sageAdd = () => {
       console.log("ok");
     };
@@ -63,7 +63,7 @@ export default defineComponent({
         .toLocaleString()
         .replace(/:\d{1,2}$/, " ");
     };
-    getPostNode(123)
+    // getPostNode(123)
     return {
       ...toRefs(props),
       sageAdd,

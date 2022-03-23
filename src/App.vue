@@ -8,6 +8,7 @@
           mode="horizontal"
           @select="handleSelect"
           active-text-color="#63acb5"
+          menu-trigger="click"
         >
           <el-sub-menu
             index="plate"
