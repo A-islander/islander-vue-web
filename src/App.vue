@@ -8,6 +8,8 @@
           mode="horizontal"
           @select="handleSelect"
           active-text-color="#63acb5"
+          menu-trigger="click"
+          :default-openeds="openSubMenu"
         >
           <el-sub-menu
             index="plate"
@@ -19,7 +21,11 @@
               <span style="color: #63acb5">板块</span>
             </template>
             <router-link to="/">
-              <el-menu-item index="1" style="color: #63acb5">
+              <el-menu-item
+                index="1"
+                style="color: #63acb5"
+                @click="closeSubMenu($event)"
+              >
                 <el-icon><house /></el-icon>
                 <div>首页</div>
               </el-menu-item>
@@ -50,7 +56,11 @@
           :collapse="false"
         >
           <div>
-            <img alt="Vue logo" src="https://s3.bmp.ovh/imgs/2022/03/7898d4008b6154e2.png" style="width: 100%" />
+            <img
+              alt="Vue logo"
+              src="https://s3.bmp.ovh/imgs/2022/03/7898d4008b6154e2.png"
+              style="width: 100%"
+            />
           </div>
           <router-link to="/">
             <el-menu-item index="1" style="color: #63acb5">
@@ -81,7 +91,10 @@
               <div>串备份地址</div>
             </el-menu-item>
           </a>
-          <a href="https://docs.apipost.cn/preview/b58077f3ebc9caeb/6a197cc600cf6f5c" target="_blank">
+          <a
+            href="https://docs.apipost.cn/preview/b58077f3ebc9caeb/6a197cc600cf6f5c"
+            target="_blank"
+          >
             <el-menu-item index="4" style="color: #63acb5">
               <el-icon><location /></el-icon>
               <div>接口文档</div>
@@ -108,14 +121,23 @@ import { provide, reactive, ref, toRefs } from "vue";
 import store from "./store";
 export default {
   setup() {
+    let openSubMenu = ref([]);
+    let closeSubMenu = (menuItem: any) => {
+      console.log(menuItem.$parent
+      
+      );
+      if (menuItem.$parent && menuItem.$parent.$options.name === "ElSubmenu") {
+        menuItem.$parent.handleMouseleave();
+      }
+    };
     let width = document.body.clientWidth;
-    let bodyStyle = ref('')
+    let bodyStyle = ref("");
     let mobileStatus = ref(false);
     if (width > 1024) {
       mobileStatus.value = true;
-      bodyStyle = ref('body-container')
+      bodyStyle = ref("body-container");
     } else {
-      bodyStyle = ref('body-container-mobile')
+      bodyStyle = ref("body-container-mobile");
     }
     let cookieName = ref(store.getters.getName);
     if (cookieName.value == "" || cookieName.value == null) {
@@ -125,6 +147,7 @@ export default {
       cookieName.value = name;
     };
     provide("updateCookieName", updateCookieName);
+    provide("closeSubMenu", closeSubMenu);
     let res = reactive({
       plateList: [],
     });
@@ -146,6 +169,8 @@ export default {
       cookieName,
       mobileStatus,
       bodyStyle,
+      openSubMenu,
+      closeSubMenu,
     };
   },
 };
