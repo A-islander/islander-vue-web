@@ -9,7 +9,6 @@
           @select="handleSelect"
           active-text-color="#63acb5"
           menu-trigger="click"
-          :default-openeds="openSubMenu"
         >
           <el-sub-menu
             index="plate"
@@ -123,9 +122,7 @@ export default {
   setup() {
     let openSubMenu = ref([]);
     let closeSubMenu = (menuItem: any) => {
-      console.log(menuItem.$parent
-      
-      );
+      console.log(menuItem.$parent);
       if (menuItem.$parent && menuItem.$parent.$options.name === "ElSubmenu") {
         menuItem.$parent.handleMouseleave();
       }
