@@ -18,6 +18,11 @@
         </div>
       </template>
       <div class="text item" style="white-space: pre-wrap">
+        <template v-for="(item, index) in postList" :key="index">
+          <div style="margin-bottom: 10px" v-if="item.showStatus">
+            <PostNode :postNode="item" />
+          </div>
+        </template>
         <!-- <div>{{ postNode.value }}</div> -->
         <PostText :text="postNode.value" />
         <div style="text-align: right; font-size: 10px; color: #63acb5">
@@ -38,8 +43,11 @@
 </template>
 <script lang="ts">
 import axios from "axios";
-import { defineComponent, toRefs } from "vue";
+import { defineComponent, provide, reactive, toRefs } from "vue";
 import PostText from "./PostText.vue";
+interface PostNode {
+  id: number;
+}
 
 export default defineComponent({
   name: "PostNode",
@@ -50,11 +58,29 @@ export default defineComponent({
     postNode: Object,
   },
   setup(props) {
+    let res = reactive({
+      postList: [] as PostNode[],
+    });
     let getPostNode = (postId: number) => {
-      axios.get("forum/get?postId=" + postId).then((response) => {
-        console.log(response.data.data);
-      });
+      let ok = false;
+      for (let i = 0; i < res.postList.length; i++) {
+        if (res.postList[i]["id"] === Number(postId)) {
+          ok = true;
+          if (res.postList[i]["showStatus"]) {
+            res.postList[i]["showStatus"] = false;
+          } else {
+            res.postList[i]["showStatus"] = true;
+          }
+        }
+      }
+      if (ok === false) {
+        axios.get("forum/get?postId=" + postId).then((response) => {
+          res.postList.push(response.data.data);
+          res.postList[res.postList.length - 1]["showStatus"] = true;
+        });
+      }
     };
+    provide("getPostNode", getPostNode);
     let sageAdd = () => {
       console.log("ok");
     };
@@ -63,11 +89,12 @@ export default defineComponent({
         .toLocaleString()
         .replace(/:\d{1,2}$/, " ");
     };
-    // getPostNode(123)
     return {
       ...toRefs(props),
       sageAdd,
       timeMiddleware,
+      ...toRefs(res),
+      getPostNode,
     };
   },
 });

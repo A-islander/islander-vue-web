@@ -175,11 +175,14 @@ export default {
 
 <style>
 html,
-body,
 #app {
   width: 100%;
   height: 100%;
   margin: 0 auto;
+}
+
+body {
+  margin: 0px;
 }
 
 .body-container {
@@ -189,8 +192,9 @@ body,
 }
 
 .body-container-mobile {
-  width: 95%;
+  width: 100%;
   height: 100%;
+  font-size: 14px;
   margin: 0 auto;
 }
 

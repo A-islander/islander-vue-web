@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" style="margin-left: 20px; margin-right: 20px;">
     <div style="margin: 0 auto">
       <img alt="Vue logo" src="https://s3.bmp.ovh/imgs/2022/03/7898d4008b6154e2.png" style="width: 100%" v-if="mobileStatus"/>
     </div>

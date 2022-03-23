@@ -1,8 +1,9 @@
 
 <script lang="ts">
-import { defineComponent, h, toRefs } from "vue";
+import { defineComponent, h, inject, toRefs } from "vue";
 
 let textRender = (str: String | undefined) => {
+  let getPostNode = inject("getPostNode") as Function;
   if (str === undefined) {
     str = "";
   }
@@ -27,12 +28,13 @@ let textRender = (str: String | undefined) => {
           )
         );
       } else if (data[i].indexOf("No.") !== -1) {
+        let num = data[i].replace(/No./, "");
         nodeArr.push(
           h(
             "el-button",
             {
               onclick: () => {
-                console.log("ok");
+                getPostNode(num);
               },
               style: "color: #63acb5",
             },
@@ -57,7 +59,8 @@ export default defineComponent({
     // let str = "2022-03-20日更新\n1. 新增议事厅板块，用以讨论岛民以及岛内务\n2. 新增界面图标，看起来正常一点了\n3. 新增串备份和接口文档地址，方便岛民查询和使用\n4. 更新readme.md，新增搭建教程：http://baidu.com 你好 http://baidu.com http://baidu.com http://baidu.com No.123";
     return { ...toRefs(props) };
   },
-  render() { // 在渲染中执行函数，setup在启动后便无法返回更新的text数据
+  render() {
+    // 在渲染中执行函数，setup在启动后便无法返回更新的text数据
     return textRender(this.text);
   },
 });
