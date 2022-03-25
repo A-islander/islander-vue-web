@@ -6,6 +6,7 @@ export default createStore({
     authorization: localStorage.getItem("token"),
     name: localStorage.getItem("name"),
     plate: [],
+    postList: [] as Object[],
   },
   getters: {
     getAuthToken: (state) => {
@@ -17,19 +18,28 @@ export default createStore({
     getPlate: (state) => {
       return state.plate
     },
-    getPlateName: (state) => (id:number) => {
+    getPlateName: (state) => (id: number) => {
       for (let i = 0; i < state.plate.length; i++) {
         if (state.plate[i]["id"] == id) {
           return state.plate[i]["name"]
         }
       }
     },
-    getPlateData: (state) => (id:number) => {
+    getPlateData: (state) => (id: number) => {
       for (let i = 0; i < state.plate.length; i++) {
         if (state.plate[i]["id"] == id) {
           return state.plate[i]
         }
       }
+      return null
+    },
+    getPost: (state) => (id: number) => {
+      for (let i = 0; i < state.postList.length; i++) {
+        if (state.postList[i]["id"] == id) {
+          return state.postList[i]
+        }
+      }
+      return null
     }
   },
   mutations: {
@@ -43,6 +53,9 @@ export default createStore({
     },
     setPlate: (state, plate) => {
       state.plate = plate
+    },
+    addPost: (state, post: Object) => {
+      state.postList.push(post)
     }
   },
   actions: {

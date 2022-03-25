@@ -1,4 +1,3 @@
-
 <script lang="ts">
 import { defineComponent, h, inject, toRefs } from "vue";
 
@@ -38,7 +37,7 @@ let textRender = (str: String | undefined) => {
               },
               style: "color: #63acb5",
             },
-            data[i]
+            data[i]+" "
           )
         );
       }

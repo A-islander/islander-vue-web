@@ -12,7 +12,9 @@
               </span>
             </el-col>
             <el-col :span="4" :offset="8" style="text-align: right">
-              <span>No.{{ postNode.id }}</span>
+              <slot>
+                <span>No.{{ postNode.id }}</span>
+              </slot>
             </el-col>
           </el-row>
         </div>
@@ -25,6 +27,19 @@
         </template>
         <!-- <div>{{ postNode.value }}</div> -->
         <PostText :text="postNode.value" />
+        <div v-for="(item, index) in mediaUrl" :key="index">
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="item.thumbnailUrl"
+            :preview-src-list="[item.url]"
+            :initial-index="1"
+            fit="cover"
+          >
+            <!-- <template #placeholder>
+              <div class="image-slot">加载中<span class="dot">...</span></div>
+            </template> -->
+          </el-image>
+        </div>
         <div style="text-align: right; font-size: 10px; color: #63acb5">
           <div @click="sageAdd()">支持SAGE：{{ postNode.sageAddCount }}</div>
           <div>反对SAGE：{{ postNode.sageSubCount }}</div>
@@ -43,12 +58,20 @@
 </template>
 <script lang="ts">
 import axios from "axios";
-import { defineComponent, provide, reactive, toRefs } from "vue";
+import {
+  defineComponent,
+  onUpdated,
+  provide,
+  reactive,
+  ref,
+  toRefs,
+  watch,
+} from "vue";
 import PostText from "./PostText.vue";
+import store from "../store";
 interface PostNode {
   id: number;
 }
-
 export default defineComponent({
   name: "PostNode",
   components: {
@@ -66,20 +89,36 @@ export default defineComponent({
       for (let i = 0; i < res.postList.length; i++) {
         if (res.postList[i]["id"] === Number(postId)) {
           ok = true;
-          if (res.postList[i]["showStatus"]) {
-            res.postList[i]["showStatus"] = false;
-          } else {
-            res.postList[i]["showStatus"] = true;
-          }
+          // 清除展示
+          res.postList.splice(i, 1);
         }
       }
       if (ok === false) {
-        axios.get("forum/get?postId=" + postId).then((response) => {
-          res.postList.push(response.data.data);
+        // 缓存查找
+        let post = store.getters.getPost(Number(postId));
+        if (post === null) {
+          axios.get("forum/get?postId=" + postId).then((response) => {
+            res.postList.push(response.data.data);
+            res.postList[res.postList.length - 1]["showStatus"] = true;
+            store.commit("addPost", res.postList[res.postList.length - 1]);
+          });
+        } else {
+          res.postList.push(post);
           res.postList[res.postList.length - 1]["showStatus"] = true;
-        });
+        }
       }
     };
+    let mediaUrl = ref([]);
+    let getMediaUrl = () => {
+      if (props.postNode !== undefined) {
+        if (props.postNode.mediaUrl !== "") {
+          mediaUrl.value = eval("(" + props.postNode.mediaUrl + ")");
+        } else {
+          mediaUrl.value = [];
+        }
+      }
+    };
+    getMediaUrl();
     provide("getPostNode", getPostNode);
     let sageAdd = () => {
       console.log("ok");
@@ -89,12 +128,16 @@ export default defineComponent({
         .toLocaleString()
         .replace(/:\d{1,2}$/, " ");
     };
+    watch(props, () => {
+      getMediaUrl();
+    });
     return {
       ...toRefs(props),
       sageAdd,
       timeMiddleware,
       ...toRefs(res),
       getPostNode,
+      mediaUrl,
     };
   },
 });

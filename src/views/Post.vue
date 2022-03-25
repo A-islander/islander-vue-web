@@ -1,5 +1,8 @@
 <template>
   <div style="border: 10px solid white">
+    <div style="font-size: 20px; color: #63acb5; margin-bottom: 5px">
+      回复No.{{ postId }}
+    </div>
     <el-input
       v-model="replyInput.value"
       :autosize="{ minRows: 2, maxRows: 4 }"
@@ -8,15 +11,77 @@
       style="padding-bottom: 5px"
     >
     </el-input>
-    <div style="text-align: right">
-      <el-button
-        type="primary"
-        @click="replyForumPost(postId, replyInput.value)"
-        color="#63acb5"
-      >
-        回复
-      </el-button>
-    </div>
+    <el-row>
+      <el-col :span="16">
+        <div style="text-align: left">
+          <el-upload
+            class="upload-demo"
+            action="https://imgurl.org/upload/aws_s3"
+            multiple
+            :on-success="
+              (response) => {
+                getUploadInfo(response);
+              }
+            "
+            :on-remove="delUploadInfo"
+            :limit="5"
+          >
+            <el-button type="primary" color="#63acb5">
+              <el-icon><film /></el-icon>
+            </el-button>
+            <template #tip>
+              <div class="el-upload__tip">
+                图片大小需小于500kb。
+              </div>
+            </template>
+          </el-upload>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div style="text-align: right">
+          <el-button-group>
+            <el-popover
+              placement="bottom"
+              :width="600"
+              trigger="click"
+              v-model:visible="emoVisible"
+            >
+              <template #reference>
+                <el-button
+                  type="primary"
+                  color="#63acb5"
+                  @click="emoVisible = !emoVisible"
+                >
+                  (`ヮ´ )
+                </el-button>
+              </template>
+              <el-row style="text-align: center">
+                <el-col
+                  :span="4"
+                  @click="replyAdd(item)"
+                  v-for="(item, index) in emoji"
+                  :key="index"
+                  style="height: 40px"
+                >
+                  <el-button type="text" style="color: #63acb5">
+                    {{ item }}
+                  </el-button>
+                </el-col>
+              </el-row>
+            </el-popover>
+            <el-button
+              type="primary"
+              @click="
+                replyForumPost(postId, replyInput.value, replyInput.mediaUrl)
+              "
+              color="#63acb5"
+            >
+              回复
+            </el-button>
+          </el-button-group>
+        </div>
+      </el-col>
+    </el-row>
   </div>
   <div>
     <div
@@ -24,7 +89,9 @@
       :key="index"
       style="border: 10px solid white"
     >
-      <PostNode :postNode="item" />
+      <PostNode :postNode="item">
+        <span @click="replyAdd('No.' + item.id)"> No.{{ item.id }} </span>
+      </PostNode>
     </div>
   </div>
   <div>
@@ -43,15 +110,22 @@ import { defineComponent, ref, reactive, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import PostNode from "../components/PostNode.vue";
 import store from "../store";
+import emoji from "../assets/emoji";
 
 export default defineComponent({
   components: {
     PostNode,
   },
   setup() {
+    let emoVisible = ref(false);
     let replyInput = reactive({
       value: "",
+      mediaUrl: [] as Array<{ id: string; url: string; thumbnailUrl: string }>,
     });
+    let replyAdd = (str: string) => {
+      replyInput.value += str;
+      emoVisible.value = false;
+    };
     let postId = ref();
     let pageRes = reactive({
       page: 1,
@@ -72,7 +146,11 @@ export default defineComponent({
           window.scrollTo(0, 0);
         });
     };
-    let replyForumPost = (followId: number, value: string) => {
+    let replyForumPost = (
+      followId: number,
+      value: string,
+      mediaUrl: Array<{ id: string; url: string; thumbnailUrl: string }>
+    ) => {
       axios.defaults.headers.common["Authorization"] =
         store.getters.getAuthToken;
       axios
@@ -80,7 +158,7 @@ export default defineComponent({
           value: value,
           followId: Number(followId),
           replyArr: [],
-          mediaUrl: "",
+          mediaUrl: JSON.stringify(mediaUrl),
         })
         .then((response) => {
           // console.log(response);
@@ -92,11 +170,25 @@ export default defineComponent({
           }
         });
     };
+    let getUploadInfo = (response: any) => {
+      replyInput.mediaUrl.push({
+        id: response.id,
+        url: response.url,
+        thumbnailUrl: response.thumbnail_url,
+      });
+    };
+    let delUploadInfo = (file: any, uploadFiles: any) => {
+      for (let i = 0; i < replyInput.mediaUrl.length; i++) {
+        if (file.response.id === replyInput.mediaUrl[i].id) {
+          replyInput.mediaUrl.splice(i, 1);
+        }
+      }
+    };
     getPost(postId.value, pageRes.page - 1, pageRes.size);
     onMounted(() => {});
     watch(pageRes, () => {
-      let obj = document.getElementById('body-container') as HTMLInputElement
-      obj.scrollTop = 0
+      let obj = document.getElementById("body-container") as HTMLInputElement;
+      obj.scrollTop = 0;
       getPost(postId.value, pageRes.page - 1, pageRes.size);
     });
     return {
@@ -105,6 +197,11 @@ export default defineComponent({
       postId,
       replyForumPost,
       pageRes,
+      replyAdd,
+      emoji,
+      emoVisible,
+      getUploadInfo,
+      delUploadInfo,
     };
   },
 });

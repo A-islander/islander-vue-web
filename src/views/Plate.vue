@@ -14,15 +14,75 @@
       style="padding-bottom: 5px"
     >
     </el-input>
-    <div style="text-align: right">
-      <el-button
-        type="primary"
-        @click="postForumPost(plateId, postInput.value, postInput.title)"
-        color="#63acb5"
-      >
-        回复
-      </el-button>
-    </div>
+    <el-row>
+      <el-col :span="16">
+        <div style="text-align: left">
+          <el-upload
+            class="upload-demo"
+            action="https://imgurl.org/upload/aws_s3"
+            multiple
+            :on-success="
+              (response) => {
+                getUploadInfo(response);
+              }
+            "
+            :on-remove="delUploadInfo"
+            :limit="5"
+          >
+            <el-button type="primary" color="#63acb5">
+              <el-icon><film /></el-icon>
+            </el-button>
+            <template #tip>
+              <div class="el-upload__tip">
+                图片大小需小于500kb。
+              </div>
+            </template>
+          </el-upload>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div style="text-align: right">
+          <el-button-group>
+            <el-popover
+              placement="bottom"
+              :width="600"
+              trigger="click"
+              v-model:visible="emoVisible"
+            >
+              <template #reference>
+                <el-button
+                  type="primary"
+                  color="#63acb5"
+                  @click="emoVisible = !emoVisible"
+                >
+                  (`ヮ´ )
+                </el-button>
+              </template>
+              <el-row style="text-align: center">
+                <el-col
+                  :span="4"
+                  @click="postAdd(item)"
+                  v-for="(item, index) in emoji"
+                  :key="index"
+                  style="height: 40px"
+                >
+                  <el-button type="text" style="color: #63acb5">
+                    {{ item }}
+                  </el-button>
+                </el-col>
+              </el-row>
+            </el-popover>
+            <el-button
+              type="primary"
+              @click="postForumPost(plateId, postInput.value, postInput.title, postInput.mediaUrl)"
+              color="#63acb5"
+            >
+              回复
+            </el-button>
+          </el-button-group>
+        </div>
+      </el-col>
+    </el-row>
   </div>
   <div>
     <div v-for="(item, index) in res.list" :key="index" class="plate-class">
@@ -47,16 +107,23 @@ import { defineComponent, onUpdated, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import PostNode from "../components/PostNode.vue";
 import store from "../store";
+import emoji from "../assets/emoji";
 
 export default defineComponent({
   components: {
     PostNode,
   },
   setup() {
+    let emoVisible = ref(false);
     let postInput = reactive({
       value: "",
       title: "",
+      mediaUrl: [] as Array<{ id: string; url: string; thumbnailUrl: string }>,
     });
+    let postAdd = (str: string) => {
+      postInput.value += str;
+      emoVisible.value = false;
+    };
     let plateId = ref();
     let plateData = reactive({
       name: "",
@@ -81,7 +148,7 @@ export default defineComponent({
           window.scrollTo(0, 0);
         });
     };
-    let postForumPost = (plateId: number, value: string, title: string) => {
+    let postForumPost = (plateId: number, value: string, title: string, mediaUrl:Array<{id: string; url: string; thumbnailUrl:string}>) => {
       axios.defaults.headers.common["Authorization"] =
         store.getters.getAuthToken;
       axios
@@ -90,7 +157,7 @@ export default defineComponent({
           title: title,
           replyArr: [],
           plateId: Number(plateId),
-          mediaUrl: "",
+          mediaUrl: JSON.stringify(mediaUrl),
         })
         .then((response) => {
           if (response.data.code == 200) {
@@ -101,6 +168,20 @@ export default defineComponent({
           postInput.value = "";
           postInput.title = "";
         });
+    };
+    let getUploadInfo = (response: any) => {
+      postInput.mediaUrl.push({
+        id: response.id,
+        url: response.url,
+        thumbnailUrl: response.thumbnail_url,
+      });
+    };
+    let delUploadInfo = (file: any, uploadFiles: any) => {
+      for (let i = 0; i < postInput.mediaUrl.length; i++) {
+        if (file.response.id === postInput.mediaUrl[i].id) {
+          postInput.mediaUrl.splice(i, 1);
+        }
+      }
     };
     const route = useRoute();
     plateId.value = route.params.plateId;
@@ -125,6 +206,11 @@ export default defineComponent({
       postForumPost,
       pageRes,
       plateData,
+      postAdd,
+      emoVisible,
+      emoji,
+      getUploadInfo,
+      delUploadInfo,
     };
   },
 });
