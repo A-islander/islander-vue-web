@@ -15,7 +15,7 @@
     >
     </el-input>
     <el-row>
-      <el-col :span="16">
+      <el-col :span="12">
         <div style="text-align: left">
           <el-upload
             class="upload-demo"
@@ -40,7 +40,7 @@
           </el-upload>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="12">
         <div style="text-align: right">
           <el-button-group>
             <el-popover
