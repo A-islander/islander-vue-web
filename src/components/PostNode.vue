@@ -2,22 +2,9 @@
   <div id="post-node-contanier">
     <el-card class="box-card" style="">
       <template #header>
-        <div class="card-header">
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <span>
-                {{ timeMiddleware(postNode.time) }}
-                <br />
-                {{ postNode.name }}
-              </span>
-            </el-col>
-            <el-col :span="4" :offset="8" style="text-align: right">
-              <slot>
-                <span>No.{{ postNode.id }}</span>
-              </slot>
-            </el-col>
-          </el-row>
-        </div>
+        <slot name="post-head">
+          <PostNodeHead :postNode="postNode" />
+        </slot>
       </template>
       <div class="text item" style="white-space: pre-wrap">
         <template v-for="(item, index) in postList" :key="index">
@@ -25,19 +12,16 @@
             <PostNode :postNode="item" />
           </div>
         </template>
-        <!-- <div>{{ postNode.value }}</div> -->
         <PostText :text="postNode.value" />
         <div v-for="(item, index) in mediaUrl" :key="index">
           <el-image
-            style="width: 100px; height: 100px"
+            style="width: 150px; height: 150px"
             :src="item.thumbnailUrl"
             :preview-src-list="[item.url]"
             :initial-index="1"
+            :hide-on-click-modal="true"
             fit="cover"
           >
-            <!-- <template #placeholder>
-              <div class="image-slot">加载中<span class="dot">...</span></div>
-            </template> -->
           </el-image>
         </div>
         <div style="text-align: right; font-size: 10px; color: #63acb5">
@@ -58,16 +42,9 @@
 </template>
 <script lang="ts">
 import axios from "axios";
-import {
-  defineComponent,
-  onUpdated,
-  provide,
-  reactive,
-  ref,
-  toRefs,
-  watch,
-} from "vue";
+import { defineComponent, provide, reactive, ref, toRefs, watch } from "vue";
 import PostText from "./PostText.vue";
+import PostNodeHead from "./PostNodeHead.vue";
 import store from "../store";
 interface PostNode {
   id: number;
@@ -76,6 +53,7 @@ export default defineComponent({
   name: "PostNode",
   components: {
     PostText,
+    PostNodeHead,
   },
   props: {
     postNode: Object,
@@ -123,18 +101,12 @@ export default defineComponent({
     let sageAdd = () => {
       console.log("ok");
     };
-    let timeMiddleware = (time: string) => {
-      return new Date(parseInt(time) * 1000)
-        .toLocaleString()
-        .replace(/:\d{1,2}$/, " ");
-    };
     watch(props, () => {
       getMediaUrl();
     });
     return {
       ...toRefs(props),
       sageAdd,
-      timeMiddleware,
       ...toRefs(res),
       getPostNode,
       mediaUrl,

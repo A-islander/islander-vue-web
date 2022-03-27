@@ -33,9 +33,7 @@
               <el-icon><film /></el-icon>
             </el-button>
             <template #tip>
-              <div class="el-upload__tip">
-                图片大小需小于500kb。
-              </div>
+              <div class="el-upload__tip">图片大小需小于500kb。</div>
             </template>
           </el-upload>
         </div>
@@ -74,7 +72,14 @@
             </el-popover>
             <el-button
               type="primary"
-              @click="postForumPost(plateId, postInput.value, postInput.title, postInput.mediaUrl)"
+              @click="
+                postForumPost(
+                  plateId,
+                  postInput.value,
+                  postInput.title,
+                  postInput.mediaUrl
+                )
+              "
               color="#63acb5"
             >
               回复
@@ -86,9 +91,13 @@
   </div>
   <div>
     <div v-for="(item, index) in res.list" :key="index" class="plate-class">
-      <router-link :to="'/post/' + item.id">
-        <PostNode :postNode="item" />
-      </router-link>
+      <PostNode :postNode="item">
+        <template #post-head>
+          <router-link :to="'/post/' + item.id">
+            <PostNodeHead :postNode="item" />
+          </router-link>
+        </template>
+      </PostNode>
     </div>
   </div>
   <div>
@@ -106,12 +115,14 @@ import axios from "axios";
 import { defineComponent, onUpdated, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import PostNode from "../components/PostNode.vue";
+import PostNodeHead from "../components/PostNodeHead.vue";
 import store from "../store";
 import emoji from "../assets/emoji";
 
 export default defineComponent({
   components: {
     PostNode,
+    PostNodeHead,
   },
   setup() {
     let emoVisible = ref(false);
@@ -148,7 +159,12 @@ export default defineComponent({
           window.scrollTo(0, 0);
         });
     };
-    let postForumPost = (plateId: number, value: string, title: string, mediaUrl:Array<{id: string; url: string; thumbnailUrl:string}>) => {
+    let postForumPost = (
+      plateId: number,
+      value: string,
+      title: string,
+      mediaUrl: Array<{ id: string; url: string; thumbnailUrl: string }>
+    ) => {
       axios.defaults.headers.common["Authorization"] =
         store.getters.getAuthToken;
       axios

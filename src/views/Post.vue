@@ -1,8 +1,17 @@
 <template>
   <div style="border: 10px solid white">
-    <div style="font-size: 20px; color: #63acb5; margin-bottom: 5px">
-      回复No.{{ postId }}
-    </div>
+    <el-breadcrumb separator="/">
+      <el-breadcrumb-item :to="{ path: '/plate/' + plateData.id }">
+        <div style="font-size: 20px; color: #63acb5; margin-bottom: 5px">
+          {{ plateData.name }}
+        </div>
+      </el-breadcrumb-item>
+      <el-breadcrumb-item>
+        <div style="font-size: 20px; color: #63acb5; margin-bottom: 5px">
+          No.{{ postId }}
+        </div>
+      </el-breadcrumb-item>
+    </el-breadcrumb>
     <el-input
       v-model="replyInput.value"
       :autosize="{ minRows: 2, maxRows: 4 }"
@@ -30,9 +39,7 @@
               <el-icon><film /></el-icon>
             </el-button>
             <template #tip>
-              <div class="el-upload__tip">
-                图片大小需小于500kb。
-              </div>
+              <div class="el-upload__tip">图片大小需小于500kb。</div>
             </template>
           </el-upload>
         </div>
@@ -90,7 +97,13 @@
       style="border: 10px solid white"
     >
       <PostNode :postNode="item">
-        <span @click="replyAdd('No.' + item.id)"> No.{{ item.id }} </span>
+        <template #post-head>
+          <PostNodeHead :postNode="item">
+            <template #post-head-number>
+              <div @click="replyAdd('No.' + item.id)">No.{{ item.id }}</div>
+            </template>
+          </PostNodeHead>
+        </template>
       </PostNode>
     </div>
   </div>
@@ -109,12 +122,14 @@ import axios from "axios";
 import { defineComponent, ref, reactive, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import PostNode from "../components/PostNode.vue";
+import PostNodeHead from "../components/PostNodeHead.vue";
 import store from "../store";
 import emoji from "../assets/emoji";
 
 export default defineComponent({
   components: {
     PostNode,
+    PostNodeHead,
   },
   setup() {
     let emoVisible = ref(false);
@@ -132,9 +147,18 @@ export default defineComponent({
       size: 20,
     });
     let res = reactive({
-      list: [],
+      list: [] as Array<{ plateId: number }>,
       count: 0,
     });
+    let plateData = reactive({
+      name: "",
+      id: 1,
+    });
+    let getPlate = () => {
+      let data = store.getters.getPlateData(Number(res.list[0].plateId));
+      plateData.name = data.name;
+      plateData.id = data.id;
+    };
     const route = useRoute();
     postId.value = route.params.postId;
     let getPost = (postId: number, page: number, size: number) => {
@@ -144,6 +168,7 @@ export default defineComponent({
           res.list = response.data.data.list;
           res.count = response.data.data.count;
           window.scrollTo(0, 0);
+          getPlate();
         });
     };
     let replyForumPost = (
@@ -161,7 +186,6 @@ export default defineComponent({
           mediaUrl: JSON.stringify(mediaUrl),
         })
         .then((response) => {
-          // console.log(response);
           if (response.data.code === 200) {
             getPost(postId.value, pageRes.page - 1, pageRes.size);
             replyInput.value = "";
@@ -184,6 +208,7 @@ export default defineComponent({
         }
       }
     };
+
     getPost(postId.value, pageRes.page - 1, pageRes.size);
     onMounted(() => {});
     watch(pageRes, () => {
@@ -202,6 +227,7 @@ export default defineComponent({
       emoVisible,
       getUploadInfo,
       delUploadInfo,
+      plateData,
     };
   },
 });

@@ -105,6 +105,12 @@
               <div>bog岛</div>
             </el-menu-item>
           </a>
+          <a href="https://www.naodong.fun" target="_blank">
+            <el-menu-item index="5" style="color: #63acb5">
+              <el-icon><location /></el-icon>
+              <div>脑洞</div>
+            </el-menu-item>
+          </a>
         </el-menu>
       </el-aside>
       <el-main>
