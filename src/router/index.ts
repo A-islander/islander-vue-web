@@ -43,6 +43,14 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/sageList',
+    name: 'SageList',
+    component: () => import('../views/SageList.vue'),
+    meta: {
+      title: "看看你都干了什么？"
+    }
+  },
+  {
     path: '/:catchAll(.*)',
     name: '404',
     component: () => import('../views/404.vue'),
@@ -57,7 +65,7 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => { 
+router.beforeEach((to, from, next) => {
   document.title = to.meta.title as string
   next()
 })

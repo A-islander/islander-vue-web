@@ -84,6 +84,12 @@
               </router-link>
             </div>
           </el-sub-menu>
+          <router-link to="/sageList">
+            <el-menu-item index="sageList" style="color: #63acb5">
+              <el-icon><location /></el-icon>
+              <div>sage串展示</div>
+            </el-menu-item>
+          </router-link>
           <a href="https://github.com/A-islander/post-backup" target="_blank">
             <el-menu-item index="3" style="color: #63acb5">
               <el-icon><location /></el-icon>

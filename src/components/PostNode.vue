@@ -24,6 +24,8 @@
           >
           </el-image>
         </div>
+        <slot name="sage-name">
+        </slot>
         <div style="text-align: right; font-size: 10px; color: #63acb5">
           <div @click="sageAdd()">支持SAGE：{{ postNode.sageAddCount }}</div>
           <div>反对SAGE：{{ postNode.sageSubCount }}</div>
