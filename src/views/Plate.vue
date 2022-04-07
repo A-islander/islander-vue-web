@@ -167,15 +167,25 @@ export default defineComponent({
       size: 20,
     });
     let getIndex = (plateId: number, page: number, size: number) => {
-      axios
-        .get(
-          "forum/index?plateId=" + plateId + "&page=" + page + "&size=" + size
-        )
-        .then((response) => {
-          res.list = response.data.data.list;
-          res.count = response.data.data.count;
-          window.scrollTo(0, 0);
-        });
+      if (Number(plateId) !== 0) {
+        axios
+          .get(
+            "forum/index?plateId=" + plateId + "&page=" + page + "&size=" + size
+          )
+          .then((response) => {
+            res.list = response.data.data.list;
+            res.count = response.data.data.count;
+            window.scrollTo(0, 0);
+          });
+      } else {
+        axios
+          .get("forum/indexLast?page=" + page + "&size=" + size)
+          .then((response) => {
+            res.list = response.data.data.list;
+            res.count = response.data.data.count;
+            window.scrollTo(0, 0);
+          });
+      }
     };
     let postForumPost = (
       plateId: number,
@@ -232,8 +242,13 @@ export default defineComponent({
     onUpdated(() => {
       plateId.value = route.params.plateId;
       let data = store.getters.getPlateData(Number(plateId.value));
-      plateData.name = data.name;
-      plateData.value = data.value;
+      if (Number(plateId.value) !== 0) {
+        plateData.name = data.name;
+        plateData.value = data.value;
+      } else {
+        plateData.name = "时间线";
+        plateData.value = "就是时间线辣";
+      }
     });
     return {
       plateId,

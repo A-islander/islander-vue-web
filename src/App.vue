@@ -55,16 +55,18 @@
           :collapse="false"
         >
           <div>
-            <img
-              alt="Vue logo"
-              src="./assets/logo.png"
-              style="width: 100%"
-            />
+            <img alt="Vue logo" src="./assets/logo.png" style="width: 100%" />
           </div>
           <router-link to="/">
             <el-menu-item index="1" style="color: #63acb5">
               <el-icon><house /></el-icon>
               <div>首页</div>
+            </el-menu-item>
+          </router-link>
+          <router-link :to="'/plate/' + 0">
+            <el-menu-item :index="'plate-' + 0" style="color: #63acb5">
+              <el-icon><guide /></el-icon>
+              <div>时间线</div>
             </el-menu-item>
           </router-link>
           <el-sub-menu index="2">
