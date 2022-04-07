@@ -57,7 +57,7 @@
           <div>
             <img
               alt="Vue logo"
-              src="https://s3.bmp.ovh/imgs/2022/03/7898d4008b6154e2.png"
+              src="./assets/logo.png"
               style="width: 100%"
             />
           </div>

@@ -41,35 +41,13 @@
       <el-col :span="12">
         <div style="text-align: right">
           <el-button-group>
-            <el-popover
-              placement="bottom"
-              :width="600"
-              trigger="click"
-              v-model:visible="emoVisible"
+            <el-button
+              type="primary"
+              color="#63acb5"
+              @click="drawInfo.status = true"
             >
-              <template #reference>
-                <el-button
-                  type="primary"
-                  color="#63acb5"
-                  @click="emoVisible = !emoVisible"
-                >
-                  (`ヮ´ )
-                </el-button>
-              </template>
-              <el-row style="text-align: center">
-                <el-col
-                  :span="4"
-                  @click="postAdd(item)"
-                  v-for="(item, index) in emoji"
-                  :key="index"
-                  style="height: 40px"
-                >
-                  <el-button type="text" style="color: #63acb5">
-                    {{ item }}
-                  </el-button>
-                </el-col>
-              </el-row>
-            </el-popover>
+              (`ヮ´ )
+            </el-button>
             <el-button
               type="primary"
               @click="
@@ -97,6 +75,11 @@
             <PostNodeHead :postNode="item" />
           </router-link>
         </template>
+        <template #reply-count>
+          <div style="font-size: 10px; color: #63acb5">
+            还有{{ item.replyCount }}条串
+          </div></template
+        >
       </PostNode>
     </div>
   </div>
@@ -109,6 +92,30 @@
       v-model:current-page="pageRes.page"
     ></el-pagination>
   </div>
+  <el-drawer
+    v-model="drawInfo.status"
+    :direction="drawInfo.direction"
+    :size="drawInfo.size"
+  >
+    <template #title>
+      <span style="color: #63acb5"> 选择你的颜文字酱！ </span>
+    </template>
+    <template #default>
+      <el-row style="text-align: center">
+        <el-col
+          :span="4"
+          @click="postAdd(item)"
+          v-for="(item, index) in emoji"
+          :key="index"
+          style="height: 50px"
+        >
+          <el-button type="text" style="color: #63acb5">
+            {{ item }}
+          </el-button>
+        </el-col>
+      </el-row>
+    </template>
+  </el-drawer>
 </template>
 <script lang="ts">
 import axios from "axios";
@@ -125,7 +132,18 @@ export default defineComponent({
     PostNodeHead,
   },
   setup() {
-    let emoVisible = ref(false);
+    let drawInfo = reactive({
+      status: false,
+      direction: "rtl",
+      size: "45%",
+    });
+    let width = document.body.clientWidth;
+    // 手机和电脑设置
+    if (width > 1024) {
+    } else {
+      drawInfo.direction = "btt";
+      drawInfo.size = "50%";
+    }
     let postInput = reactive({
       value: "",
       title: "",
@@ -133,7 +151,7 @@ export default defineComponent({
     });
     let postAdd = (str: string) => {
       postInput.value += str;
-      emoVisible.value = false;
+      drawInfo.status = false;
     };
     let plateId = ref();
     let plateData = reactive({
@@ -178,8 +196,10 @@ export default defineComponent({
         .then((response) => {
           if (response.data.code == 200) {
             getIndex(plateId, pageRes.page - 1, pageRes.size);
-          } else {
+          } else if (response.data.code == 403) {
             alert("请领取饼干");
+          } else if (response.data.code == 404) {
+            alert("总得说点什么吧");
           }
           postInput.value = "";
           postInput.title = "";
@@ -223,10 +243,10 @@ export default defineComponent({
       pageRes,
       plateData,
       postAdd,
-      emoVisible,
       emoji,
       getUploadInfo,
       delUploadInfo,
+      drawInfo,
     };
   },
 });
