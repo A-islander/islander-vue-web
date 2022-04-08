@@ -12,9 +12,10 @@
       type="textarea"
       placeholder="来说点什么吧"
       style="padding-bottom: 5px"
+      v-if="plateId != 0"
     >
     </el-input>
-    <el-row>
+    <el-row v-if="plateId != 0">
       <el-col :span="12">
         <div style="text-align: left">
           <el-upload
@@ -72,7 +73,11 @@
       <PostNode :postNode="item">
         <template #post-head>
           <router-link :to="'/post/' + item.id">
-            <PostNodeHead :postNode="item" />
+            <PostNodeHead :postNode="item">
+              <template #post-head-tag v-if="plateId == 0">
+                {{ getPlateData(item.plateId).name }}
+              </template>
+            </PostNodeHead>
           </router-link>
         </template>
         <template #reply-count>
@@ -193,27 +198,31 @@ export default defineComponent({
       title: string,
       mediaUrl: Array<{ id: string; url: string; thumbnailUrl: string }>
     ) => {
-      axios.defaults.headers.common["Authorization"] =
-        store.getters.getAuthToken;
-      axios
-        .post("forum/post", {
-          value: value,
-          title: title,
-          replyArr: [],
-          plateId: Number(plateId),
-          mediaUrl: JSON.stringify(mediaUrl),
-        })
-        .then((response) => {
-          if (response.data.code == 200) {
-            getIndex(plateId, pageRes.page - 1, pageRes.size);
-          } else if (response.data.code == 403) {
-            alert("请领取饼干");
-          } else if (response.data.code == 404) {
-            alert("总得说点什么吧");
-          }
-          postInput.value = "";
-          postInput.title = "";
-        });
+      if (plateId != 0) {
+        axios.defaults.headers.common["Authorization"] =
+          store.getters.getAuthToken;
+        axios
+          .post("forum/post", {
+            value: value,
+            title: title,
+            replyArr: [],
+            plateId: Number(plateId),
+            mediaUrl: JSON.stringify(mediaUrl),
+          })
+          .then((response) => {
+            if (response.data.code == 200) {
+              getIndex(plateId, pageRes.page - 1, pageRes.size);
+            } else if (response.data.code == 403) {
+              alert("请领取饼干");
+            } else if (response.data.code == 404) {
+              alert("总得说点什么吧");
+            }
+            postInput.value = "";
+            postInput.title = "";
+          });
+      } else {
+        alert("去选一下板块吧");
+      }
     };
     let getUploadInfo = (response: any) => {
       postInput.mediaUrl.push({
@@ -239,9 +248,10 @@ export default defineComponent({
     watch(pageRes, () => {
       getIndex(plateId.value, pageRes.page - 1, pageRes.size);
     });
+    let getPlateData = store.getters.getPlateData;
     onUpdated(() => {
       plateId.value = route.params.plateId;
-      let data = store.getters.getPlateData(Number(plateId.value));
+      let data = getPlateData(Number(plateId.value));
       if (Number(plateId.value) !== 0) {
         plateData.name = data.name;
         plateData.value = data.value;
@@ -251,6 +261,7 @@ export default defineComponent({
       }
     });
     return {
+      getPlateData,
       plateId,
       res,
       postInput,

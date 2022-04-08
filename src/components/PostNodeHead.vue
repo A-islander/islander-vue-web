@@ -12,6 +12,8 @@
         <slot name="post-head-number">
           <span>No.{{ postNode.id }}</span>
         </slot>
+        <br />
+        <slot name="post-head-tag"></slot>
       </el-col>
     </el-row>
   </div>

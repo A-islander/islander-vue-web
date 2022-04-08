@@ -29,6 +29,12 @@
                 <div>首页</div>
               </el-menu-item>
             </router-link>
+            <router-link :to="'/plate/' + 0">
+              <el-menu-item :index="'plate-' + 0" style="color: #63acb5">
+                <el-icon><guide /></el-icon>
+                <div>时间线</div>
+              </el-menu-item>
+            </router-link>
             <div v-for="(item, index) in plateList" :key="index">
               <router-link :to="'/plate/' + item.id">
                 <el-menu-item
@@ -107,16 +113,22 @@
               <div>接口文档</div>
             </el-menu-item>
           </a>
+          <a href="https://www.naodong.fun" target="_blank">
+            <el-menu-item index="5" style="color: #63acb5">
+              <el-icon><location /></el-icon>
+              <div>脑洞</div>
+            </el-menu-item>
+          </a>
           <a href="http://bog.ac" target="_blank">
             <el-menu-item index="5" style="color: #63acb5">
               <el-icon><location /></el-icon>
               <div>bog岛</div>
             </el-menu-item>
           </a>
-          <a href="https://www.naodong.fun" target="_blank">
+          <a href="https://www.huanleegao.com" target="_blank">
             <el-menu-item index="5" style="color: #63acb5">
               <el-icon><location /></el-icon>
-              <div>脑洞</div>
+              <div>欢乐恶狗岛</div>
             </el-menu-item>
           </a>
         </el-menu>
