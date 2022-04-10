@@ -77,7 +77,7 @@ export default defineComponent({
       postList: [] as PostNode[],
     });
     let sageInfo = reactive({
-      addInfo: "你确定要sage它吗？",
+      addInfo: "你要sage它吗？",
       subInfo: "你要反对sage它吗？",
     });
     if (props.userId !== undefined) {
