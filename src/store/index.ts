@@ -4,6 +4,7 @@ export default createStore({
   state: {
     authorization: localStorage.getItem("token"),
     name: localStorage.getItem("name"),
+    userId: Number(localStorage.getItem("userId")),
     plate: [],
     postList: [] as Object[],
   },
@@ -13,6 +14,9 @@ export default createStore({
     },
     getName: (state) => {
       return state.name
+    },
+    getUserId: (state) => {
+      return state.userId
     },
     getPlate: (state) => {
       return state.plate
@@ -49,6 +53,10 @@ export default createStore({
     setName: (state, name: string) => {
       state.name = name
       localStorage.setItem("name", name)
+    },
+    setUserId: (state, userId: number) => {
+      state.userId = Number(userId)
+      localStorage.setItem("userId", String(userId))
     },
     setPlate: (state, plate) => {
       state.plate = plate

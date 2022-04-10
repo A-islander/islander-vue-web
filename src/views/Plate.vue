@@ -70,7 +70,7 @@
   </div>
   <div>
     <div v-for="(item, index) in res.list" :key="index" class="plate-class">
-      <PostNode :postNode="item">
+      <PostNode :postNode="item" :userId="userId">
         <template #post-head>
           <router-link :to="'/post/' + item.id">
             <PostNodeHead :postNode="item">
@@ -260,7 +260,9 @@ export default defineComponent({
         plateData.value = "就是时间线辣";
       }
     });
+    let userId = ref(store.getters.getUserId);
     return {
+      userId,
       getPlateData,
       plateId,
       res,

@@ -8,7 +8,7 @@
           {{ postNode.name }}
         </span>
       </el-col>
-      <el-col :span="4" :offset="8" style="text-align: right">
+      <el-col :span="6" :offset="6" style="text-align: right">
         <slot name="post-head-number">
           <span>No.{{ postNode.id }}</span>
         </slot>

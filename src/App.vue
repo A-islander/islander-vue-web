@@ -6,7 +6,6 @@
           :default-active="activeIndex"
           class="el-menu-demo"
           mode="horizontal"
-          @select="handleSelect"
           active-text-color="#63acb5"
           menu-trigger="click"
         >
@@ -19,11 +18,10 @@
               <el-icon style="color: #63acb5"><location /></el-icon>
               <span style="color: #63acb5">板块</span>
             </template>
-            <router-link to="/">
+            <router-link to="/home">
               <el-menu-item
                 index="1"
                 style="color: #63acb5"
-                @click="closeSubMenu($event)"
               >
                 <el-icon><house /></el-icon>
                 <div>首页</div>
@@ -63,7 +61,7 @@
           <div>
             <img alt="Vue logo" src="./assets/logo.png" style="width: 100%" />
           </div>
-          <router-link to="/">
+          <router-link to="/home">
             <el-menu-item index="1" style="color: #63acb5">
               <el-icon><house /></el-icon>
               <div>首页</div>
@@ -120,13 +118,13 @@
             </el-menu-item>
           </a>
           <a href="http://bog.ac" target="_blank">
-            <el-menu-item index="5" style="color: #63acb5">
+            <el-menu-item index="6" style="color: #63acb5">
               <el-icon><location /></el-icon>
               <div>bog岛</div>
             </el-menu-item>
           </a>
           <a href="https://www.huanleegao.com" target="_blank">
-            <el-menu-item index="5" style="color: #63acb5">
+            <el-menu-item index="7" style="color: #63acb5">
               <el-icon><location /></el-icon>
               <div>欢乐恶狗岛</div>
             </el-menu-item>
@@ -146,13 +144,6 @@ import { provide, reactive, ref, toRefs } from "vue";
 import store from "./store";
 export default {
   setup() {
-    let openSubMenu = ref([]);
-    let closeSubMenu = (menuItem: any) => {
-      console.log(menuItem.$parent);
-      if (menuItem.$parent && menuItem.$parent.$options.name === "ElSubmenu") {
-        menuItem.$parent.handleMouseleave();
-      }
-    };
     let width = document.body.clientWidth;
     let bodyStyle = ref("");
     let mobileStatus = ref(false);
@@ -170,7 +161,6 @@ export default {
       cookieName.value = name;
     };
     provide("updateCookieName", updateCookieName);
-    provide("closeSubMenu", closeSubMenu);
     let res = reactive({
       plateList: [],
     });
@@ -182,18 +172,12 @@ export default {
     };
     GetPlate();
     const activeIndex = ref("1");
-    const handleSelect = (key: string, keyPath: string[]) => {
-      // console.log(key, keyPath)
-    };
     return {
       ...toRefs(res),
-      handleSelect,
       activeIndex,
       cookieName,
       mobileStatus,
       bodyStyle,
-      openSubMenu,
-      closeSubMenu,
     };
   },
 };

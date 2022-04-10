@@ -10,7 +10,6 @@
             <el-button
               :disabled="tokenStatus"
               @click="getUserToken()"
-
             >
               领取饼干
             </el-button>
@@ -61,7 +60,9 @@ export default defineComponent({
           res.name = "n98";
         } else {
           res.name = response.data.data.name;
+          res.id = response.data.data.id;
           store.commit("setName", res.name);
+          store.commit("setUserId", res.id);
           updateCookieName(res.name);
           tokenStatus.value = true;
         }

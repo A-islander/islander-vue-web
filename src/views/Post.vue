@@ -74,7 +74,7 @@
       :key="index"
       style="border: 10px solid white"
     >
-      <PostNode :postNode="item">
+      <PostNode :postNode="item" :userId="userId">
         <template #post-head>
           <PostNodeHead :postNode="item">
             <template #post-head-number>
@@ -231,7 +231,9 @@ export default defineComponent({
       obj.scrollTop = 0;
       getPost(postId.value, pageRes.page - 1, pageRes.size);
     });
+    let userId = ref(store.getters.getUserId);
     return {
+      userId,
       res,
       replyInput,
       postId,

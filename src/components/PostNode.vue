@@ -26,9 +26,20 @@
         </div>
         <slot name="sage-name"> </slot>
         <div style="text-align: right; font-size: 10px; color: #63acb5">
-          <div @click="sageAdd()">支持SAGE：{{ postNode.sageAddCount }}</div>
-          <div>反对SAGE：{{ postNode.sageSubCount }}</div>
-          <!-- <el-icon :size="20" :color="'#63acb5'"><edit /></el-icon> -->
+          <div>
+            <el-popconfirm :title="sageInfo.addInfo" @confirm="sageAdd()">
+              <template #reference>
+                支持SAGE：{{ postNode.sageAddCount }}
+              </template>
+            </el-popconfirm>
+          </div>
+          <div>
+            <el-popconfirm :title="sageInfo.subInfo" @confirm="sageSub()">
+              <template #reference>
+                反对SAGE：{{ postNode.sageSubCount }}
+              </template>
+            </el-popconfirm>
+          </div>
         </div>
       </div>
       <div
@@ -59,11 +70,26 @@ export default defineComponent({
   },
   props: {
     postNode: Object,
+    userId: Number,
   },
   setup(props) {
     let res = reactive({
       postList: [] as PostNode[],
     });
+    let sageInfo = reactive({
+      addInfo: "你确定要sage它吗？",
+      subInfo: "你要反对sage它吗？",
+    });
+    if (props.userId !== undefined) {
+      let addData = (props.postNode as { sageAddId: Array<Number> }).sageAddId;
+      if (addData.indexOf(props.userId) !== -1) {
+        sageInfo.addInfo = "你要取消sage它吗";
+      }
+      let subData = (props.postNode as { sageSubId: Array<Number> }).sageSubId;
+      if (subData.indexOf(props.userId) !== -1) {
+        sageInfo.subInfo = "你要取消反对sage它吗";
+      }
+    }
     let getPostNode = (postId: number) => {
       let ok = false;
       for (let i = 0; i < res.postList.length; i++) {
@@ -103,12 +129,17 @@ export default defineComponent({
     let sageAdd = () => {
       console.log("ok");
     };
+    let sageSub = () => {
+      console.log("ok");
+    };
     watch(props, () => {
       getMediaUrl();
     });
     return {
+      sageInfo,
       ...toRefs(props),
       sageAdd,
+      sageSub,
       ...toRefs(res),
       getPostNode,
       mediaUrl,
