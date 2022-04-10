@@ -80,6 +80,7 @@ export default defineComponent({
       addInfo: "你要sage它吗？",
       subInfo: "你要反对sage它吗？",
     });
+    console.log(props.userId, props.postNode);
     if (props.userId !== undefined) {
       let addData = (props.postNode as { sageAddId: Array<Number> }).sageAddId;
       if (addData.indexOf(props.userId) !== -1) {
@@ -89,6 +90,7 @@ export default defineComponent({
       if (subData.indexOf(props.userId) !== -1) {
         sageInfo.subInfo = "你要取消反对sage它吗";
       }
+      console.log(addData, subData);
     }
     let getPostNode = (postId: number) => {
       let ok = false;

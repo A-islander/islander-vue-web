@@ -9,7 +9,7 @@
   </div>
   <div>
     <div v-for="(item, index) in res.list" :key="index" class="plate-class">
-      <PostNode :postNode="item">
+      <PostNode :postNode="item" :userId="userId">
         <!-- <template #post-head>
           <router-link :to="'/post/' + item.id">
             <PostNodeHead :postNode="item" />
@@ -32,8 +32,9 @@
 
 <script lang="ts">
 import axios from "axios";
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 import PostNode from "../components/PostNode.vue";
+import store from "../store";
 
 export default defineComponent({
   components: {
@@ -57,7 +58,9 @@ export default defineComponent({
         });
     };
     getList(0, 10);
+    let userId = ref(store.getters.getUserId);
     return {
+      userId,
       res,
       pageRes,
     };
