@@ -27,14 +27,20 @@
         <slot name="sage-name"> </slot>
         <div style="text-align: right; font-size: 10px; color: #63acb5">
           <div>
-            <el-popconfirm :title="sageInfo.addInfo" @confirm="sageAdd()">
+            <el-popconfirm
+              :title="sageInfo.addInfo"
+              @confirm="sageAdd(postNode.id)"
+            >
               <template #reference>
                 支持SAGE：{{ postNode.sageAddCount }}
               </template>
             </el-popconfirm>
           </div>
           <div>
-            <el-popconfirm :title="sageInfo.subInfo" @confirm="sageSub()">
+            <el-popconfirm
+              :title="sageInfo.subInfo"
+              @confirm="sageSub(postNode.id)"
+            >
               <template #reference>
                 反对SAGE：{{ postNode.sageSubCount }}
               </template>
@@ -55,10 +61,11 @@
 </template>
 <script lang="ts">
 import axios from "axios";
-import { defineComponent, provide, reactive, ref, toRefs, watch } from "vue";
+import { defineComponent, provide, reactive, ref, toRefs, watch, h } from "vue";
 import PostText from "./PostText.vue";
 import PostNodeHead from "./PostNodeHead.vue";
 import store from "../store";
+import { ElMessage } from "element-plus";
 interface PostNode {
   id: number;
 }
@@ -80,7 +87,6 @@ export default defineComponent({
       addInfo: "你要sage它吗？",
       subInfo: "你要反对sage它吗？",
     });
-    console.log(props.userId, props.postNode);
     if (props.userId !== undefined) {
       let addData = (props.postNode as { sageAddId: Array<Number> }).sageAddId;
       if (addData.indexOf(props.userId) !== -1) {
@@ -90,7 +96,6 @@ export default defineComponent({
       if (subData.indexOf(props.userId) !== -1) {
         sageInfo.subInfo = "你要取消反对sage它吗";
       }
-      console.log(addData, subData);
     }
     let getPostNode = (postId: number) => {
       let ok = false;
@@ -128,11 +133,37 @@ export default defineComponent({
     };
     getMediaUrl();
     provide("getPostNode", getPostNode);
-    let sageAdd = () => {
-      console.log("ok");
+    let sageAdd = (postId: number) => {
+      axios.defaults.headers.common["Authorization"] =
+        store.getters.getAuthToken;
+      axios.get("forum/sage/add?postId=" + postId).then((response) => {
+        if (response.data.data) {
+          addMessage();
+          (props.postNode as { sageAddCount: number }).sageAddCount += 1;
+        } else {
+          subMessage();
+          (props.postNode as { sageAddCount: number }).sageAddCount -= 1;
+        }
+      });
     };
-    let sageSub = () => {
-      console.log("ok");
+    let addMessage = () => {
+      ElMessage("添加成功");
+    };
+    let subMessage = () => {
+      ElMessage("取消成功");
+    };
+    let sageSub = (postId: number) => {
+      axios.defaults.headers.common["Authorization"] =
+        store.getters.getAuthToken;
+      axios.get("forum/sage/sub?postId=" + postId).then((response) => {
+        if (response.data.data) {
+          addMessage();
+          (props.postNode as { sageSubCount: number }).sageSubCount += 1;
+        } else {
+          subMessage();
+          (props.postNode as { sageSubCount: number }).sageSubCount -= 1;
+        }
+      });
     };
     watch(props, () => {
       getMediaUrl();

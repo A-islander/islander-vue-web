@@ -15,7 +15,10 @@
             <PostNodeHead :postNode="item" />
           </router-link>
         </template> -->
-        <template #sage-name>{{ item.sageAddId }}</template>
+        <template #sage-name>
+          支持sage: {{ item.sageAddUser }}
+          反对sage: {{ item.sageSubUser }}
+        </template>
       </PostNode>
     </div>
   </div>
