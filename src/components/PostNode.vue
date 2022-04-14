@@ -91,12 +91,12 @@ export default defineComponent({
     });
     if (props.userId !== undefined) {
       let addData = (props.postNode as { sageAddId: Array<Number> }).sageAddId;
-      if (addData.indexOf(props.userId) !== -1) {
+      if (addData != null && addData.indexOf(props.userId) !== -1) {
         sageInfo.addInfo = "你要取消sage它吗";
         sageInfo.addStatus = 1;
       }
       let subData = (props.postNode as { sageSubId: Array<Number> }).sageSubId;
-      if (subData.indexOf(props.userId) !== -1) {
+      if (subData != null && subData.indexOf(props.userId) !== -1) {
         sageInfo.subInfo = "你要取消反对sage它吗";
         sageInfo.subStatus = 1;
       }
