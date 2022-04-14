@@ -40,9 +40,9 @@ axios.interceptors.request.use((config: AxiosRequestConfig) => {
 // 响应拦截
 axios.interceptors.response.use((response: AxiosResponse<any>) => {
     endLoading()
-    // if (response.data.code !== 200) {
-    //     alert(response.data.msg)
-    // }
+    if (response.data.code == 403) {
+        alert("没有饼干！！！")
+    }
     return response
 }, error => {
     endLoading()

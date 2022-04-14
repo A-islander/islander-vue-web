@@ -85,16 +85,20 @@ export default defineComponent({
     });
     let sageInfo = reactive({
       addInfo: "你要sage它吗？",
+      addStatus: 0,
       subInfo: "你要反对sage它吗？",
+      subStatus: 0,
     });
     if (props.userId !== undefined) {
       let addData = (props.postNode as { sageAddId: Array<Number> }).sageAddId;
       if (addData.indexOf(props.userId) !== -1) {
         sageInfo.addInfo = "你要取消sage它吗";
+        sageInfo.addStatus = 1;
       }
       let subData = (props.postNode as { sageSubId: Array<Number> }).sageSubId;
       if (subData.indexOf(props.userId) !== -1) {
         sageInfo.subInfo = "你要取消反对sage它吗";
+        sageInfo.subStatus = 1;
       }
     }
     let getPostNode = (postId: number) => {
@@ -140,9 +144,15 @@ export default defineComponent({
         if (response.data.data) {
           addMessage();
           (props.postNode as { sageAddCount: number }).sageAddCount += 1;
-        } else {
+          if(sageInfo.subStatus == 1) {
+            (props.postNode as { sageSubCount: number }).sageSubCount -= 1;
+            sageInfo.subStatus = 0;
+          }
+          sageInfo.addStatus = 1;
+        } else if (response.data.data !== undefined && response.data.data === false) {
           subMessage();
           (props.postNode as { sageAddCount: number }).sageAddCount -= 1;
+          sageInfo.addStatus = 0;
         }
       });
     };
@@ -159,9 +169,15 @@ export default defineComponent({
         if (response.data.data) {
           addMessage();
           (props.postNode as { sageSubCount: number }).sageSubCount += 1;
-        } else {
+          if(sageInfo.addStatus == 1) {
+            (props.postNode as { sageAddCount: number }).sageAddCount -= 1;
+            sageInfo.addStatus = 0;
+          }
+          sageInfo.subStatus = 1;
+        } else if (response.data.data !== undefined && response.data.data === false) {
           subMessage();
           (props.postNode as { sageSubCount: number }).sageSubCount -= 1;
+          sageInfo.subStatus = 0;
         }
       });
     };
