@@ -228,7 +228,7 @@ export default defineComponent({
     onMounted(() => {});
     watch(pageRes, () => {
       let obj = document.getElementById("body-container") as HTMLInputElement;
-      obj.scrollTop = 0;
+      // obj.scrollTop = 0;
       getPost(postId.value, pageRes.page - 1, pageRes.size);
     });
     let userId = ref(store.getters.getUserId);
