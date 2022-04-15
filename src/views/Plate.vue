@@ -132,6 +132,7 @@ import store from "../store";
 import emoji from "../assets/emoji";
 
 export default defineComponent({
+  name: "plate",
   components: {
     PostNode,
     PostNodeHead,

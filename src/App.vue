@@ -132,7 +132,11 @@
         </el-menu>
       </el-aside>
       <el-main>
-        <router-view />
+        <router-view v-slot="{ Component }">
+          <keep-alive include="plate">
+            <component :is="Component" />
+          </keep-alive>
+        </router-view>
       </el-main>
     </el-container>
   </div>
