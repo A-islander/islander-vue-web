@@ -9,42 +9,14 @@
           active-text-color="#63acb5"
           menu-trigger="click"
         >
-          <el-sub-menu
+          <el-menu-item
             index="plate"
             style="color: #63acb5"
             v-if="!mobileStatus"
+            @click="mobileDrawerStatus = true"
           >
-            <template #title>
-              <el-icon style="color: #63acb5"><location /></el-icon>
-              <span style="color: #63acb5">板块</span>
-            </template>
-            <router-link to="/home">
-              <el-menu-item
-                index="1"
-                style="color: #63acb5"
-              >
-                <el-icon><house /></el-icon>
-                <div>首页</div>
-              </el-menu-item>
-            </router-link>
-            <router-link :to="'/plate/' + 0">
-              <el-menu-item :index="'plate-' + 0" style="color: #63acb5">
-                <el-icon><guide /></el-icon>
-                <div>时间线</div>
-              </el-menu-item>
-            </router-link>
-            <div v-for="(item, index) in plateList" :key="index">
-              <router-link :to="'/plate/' + item.id">
-                <el-menu-item
-                  :index="'plate-' + item.id"
-                  style="color: #63acb5"
-                >
-                  <el-icon><guide /></el-icon>
-                  <div>{{ item.name }}</div>
-                </el-menu-item>
-              </router-link>
-            </div>
-          </el-sub-menu>
+            <span>板块选择</span>
+          </el-menu-item>
           <el-menu-item index="login" style="color: #63acb5">
             <router-link to="/login">{{ cookieName }}</router-link>
           </el-menu-item>
@@ -140,6 +112,83 @@
       </el-main>
     </el-container>
   </div>
+  <el-drawer v-model="mobileDrawerStatus" size="50%" direction="ltr">
+    <template #title>
+      <span style="color: #63acb5">板块选择</span>
+    </template>
+    <el-menu
+      default-active="2"
+      class="el-menu-mobile"
+      :collapse="false"
+      style="border-right: 0"
+    >
+      <router-link to="/home" @click="mobileDrawerStatus = false">
+        <el-menu-item index="1" style="color: #63acb5">
+          <el-icon><house /></el-icon>
+          <div>首页</div>
+        </el-menu-item>
+      </router-link>
+      <router-link :to="'/plate/' + 0" @click="mobileDrawerStatus = false">
+        <el-menu-item :index="'plate-' + 0" style="color: #63acb5">
+          <el-icon><guide /></el-icon>
+          <div>时间线</div>
+        </el-menu-item>
+      </router-link>
+      <el-sub-menu index="2">
+        <template #title>
+          <el-icon style="color: #63acb5"><location /></el-icon>
+          <span style="color: #63acb5">板块</span>
+        </template>
+        <div v-for="(item, index) in plateList" :key="index">
+          <router-link :to="'/plate/' + item.id" @click="mobileDrawerStatus = false">
+            <el-menu-item :index="'plate-' + item.id" style="color: #63acb5">
+              <el-icon><guide /></el-icon>
+              <div>{{ item.name }}</div>
+            </el-menu-item>
+          </router-link>
+        </div>
+      </el-sub-menu>
+      <router-link to="/sageList" @click="mobileDrawerStatus = false">
+        <el-menu-item index="sageList" style="color: #63acb5">
+          <el-icon><location /></el-icon>
+          <div>sage串展示</div>
+        </el-menu-item>
+      </router-link>
+      <a href="https://github.com/A-islander/post-backup" target="_blank">
+        <el-menu-item index="3" style="color: #63acb5">
+          <el-icon><location /></el-icon>
+          <div>串备份地址</div>
+        </el-menu-item>
+      </a>
+      <a
+        href="https://docs.apipost.cn/preview/b58077f3ebc9caeb/6a197cc600cf6f5c"
+        target="_blank"
+      >
+        <el-menu-item index="4" style="color: #63acb5">
+          <el-icon><location /></el-icon>
+          <div>接口文档</div>
+        </el-menu-item>
+      </a>
+      <a href="https://www.naodong.fun" target="_blank">
+        <el-menu-item index="5" style="color: #63acb5">
+          <el-icon><location /></el-icon>
+          <div>脑洞</div>
+        </el-menu-item>
+      </a>
+      <a href="http://bog.ac" target="_blank">
+        <el-menu-item index="6" style="color: #63acb5">
+          <el-icon><location /></el-icon>
+          <div>bog岛</div>
+        </el-menu-item>
+      </a>
+      <a href="https://www.huanleegao.com" target="_blank">
+        <el-menu-item index="7" style="color: #63acb5">
+          <el-icon><location /></el-icon>
+          <div>欢乐恶狗岛</div>
+        </el-menu-item>
+      </a>
+    </el-menu>
+  </el-drawer>
 </template>
 
 <script lang="ts">
@@ -151,6 +200,7 @@ export default {
     let width = document.body.clientWidth;
     let bodyStyle = ref("");
     let mobileStatus = ref(false);
+    let mobileDrawerStatus = ref(false);
     if (width > 1024) {
       mobileStatus.value = true;
       bodyStyle = ref("body-container");
@@ -181,6 +231,7 @@ export default {
       activeIndex,
       cookieName,
       mobileStatus,
+      mobileDrawerStatus,
       bodyStyle,
     };
   },
@@ -222,5 +273,9 @@ a {
 }
 p {
   margin: 0 auto;
+}
+
+.el-menu {
+  border-right: 0;
 }
 </style>
