@@ -1,35 +1,44 @@
 <template>
-  <div>
-    <el-card class="box-card">
-      <template #header>
-        <div class="card-header">
-          <el-row>
-            <el-col :span="8">
-              <span>饼干信息</span>
-            </el-col>
-            <el-col :span="8" :offset="8" style="text-align: right">
-              <el-button :disabled="tokenStatus" @click="getUserToken()">
-                领取饼干
-              </el-button>
-            </el-col>
-          </el-row>
-        </div>
-      </template>
-      <div class="text item">饼干名：{{ res.name }}</div>
-      <div class="text item">饼干：{{ token }}</div>
-    </el-card>
-  </div>
-  <div v-for="(item, index) in userPostList.list" :key="index" class="plate-class">
-    <PostNode :postNode="item" :userId="res.id"></PostNode>
-  </div>
+  <el-card class="box-card">
+    <template #header>
+      <div class="card-header">
+        <el-row>
+          <el-col :span="8">
+            <span>饼干信息</span>
+          </el-col>
+          <el-col :span="8" :offset="8" style="text-align: right">
+            <el-button :disabled="tokenStatus" @click="getUserToken()">
+              领取饼干
+            </el-button>
+          </el-col>
+        </el-row>
+      </div>
+    </template>
+    <div class="text item">饼干名：{{ res.name }}</div>
+    <div class="text item">饼干：{{ token }}</div>
+  </el-card>
+  <PostNode
+    v-for="(item, index) in userPostList.list"
+    :key="index"
+    :postNode="item"
+    :userId="res.id"
+  ></PostNode>
+
+  <el-pagination
+    layout="prev, pager, next"
+    :page-size="pageRes.size"
+    :page-count="Math.ceil(userPostList.count / pageRes.size)"
+    :hide-on-single-page="Math.ceil(userPostList.count / pageRes.size) == 1"
+    v-model:current-page="pageRes.page"
+  ></el-pagination>
 </template>
 <script lang="ts">
 import { inject } from "vue-demi";
 
 import axios from "axios";
-import { defineComponent, ref, reactive } from "vue";
+import { defineComponent, ref, reactive, watch } from "vue";
 import store from "../store";
-import PostNode from "../components/PostNode.vue"
+import PostNode from "../components/PostNode.vue";
 
 export default defineComponent({
   components: {
@@ -47,6 +56,10 @@ export default defineComponent({
       id: 0,
       name: "",
       registerTime: 0,
+    });
+    let pageRes = reactive({
+      page: 1,
+      size: 20,
     });
     token.value = store.getters.getAuthToken;
     let getUserToken = () => {
@@ -81,15 +94,23 @@ export default defineComponent({
     };
     let getUserPostList = (page: number, size: number) => {
       axios.defaults.headers.common["Authorization"] = token.value;
-      axios.get("forum/userList?page" + page + "&size=" + size).then((response) => {
-        userPostList.list = response.data.data.list;
-        userPostList.count = response.data.data.count;
-        console.log(userPostList);
-      })
-    }
-    getUserPostList(0, 10);
+      axios
+        .get("forum/userList?page=" + page + "&size=" + size)
+        .then((response) => {
+          userPostList.list = response.data.data.list;
+          userPostList.count = response.data.data.count;
+          console.log(userPostList);
+        });
+    };
+    getUserPostList(pageRes.page - 1, pageRes.size);
+    watch(pageRes, () => {
+      let obj = document.getElementById("body-container") as HTMLInputElement;
+      // obj.scrollTop = 0;
+      getUserPostList(pageRes.page - 1, pageRes.size);
+    });
     getUserInfo();
     return {
+      pageRes,
       userPostList,
       token,
       res,
