@@ -105,7 +105,7 @@
       </el-aside>
       <el-main>
         <router-view v-slot="{ Component }">
-          <keep-alive include="plate">
+          <keep-alive include="plate,login">
             <component :is="Component" />
           </keep-alive>
         </router-view>

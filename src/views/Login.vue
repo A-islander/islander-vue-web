@@ -22,6 +22,7 @@
     :key="index"
     :postNode="item"
     :userId="res.id"
+    @click="if(item.followId !== 0) gotoPost(item.followId); else gotoPost(item.id);"
   ></PostNode>
 
   <el-pagination
@@ -37,10 +38,13 @@ import { inject } from "vue-demi";
 
 import axios from "axios";
 import { defineComponent, ref, reactive, watch } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { useRouter } from "vue-router";
 import store from "../store";
 import PostNode from "../components/PostNode.vue";
 
 export default defineComponent({
+  name: "login",
   components: {
     PostNode,
   },
@@ -102,6 +106,25 @@ export default defineComponent({
           console.log(userPostList);
         });
     };
+    let router = useRouter();
+    let gotoPost = (postId:number) => {
+      ElMessageBox.confirm(
+        "确定要查看原串吗?",
+        "查看原串",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          ElMessage({
+            type: "success",
+            message: "到达原串",
+          });
+          router.push("/post/"+postId);
+        })
+    };
     getUserPostList(pageRes.page - 1, pageRes.size);
     watch(pageRes, () => {
       let obj = document.getElementById("body-container") as HTMLInputElement;
@@ -110,6 +133,7 @@ export default defineComponent({
     });
     getUserInfo();
     return {
+      gotoPost,
       pageRes,
       userPostList,
       token,
