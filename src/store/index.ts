@@ -7,6 +7,7 @@ export default createStore({
     userId: Number(localStorage.getItem("userId")),
     plate: [],
     postList: [] as Object[],
+    imgToken: "",
   },
   getters: {
     getAuthToken: (state) => {
@@ -43,6 +44,9 @@ export default createStore({
         }
       }
       return null
+    },
+    getImgToken: (state) => {
+      return state.imgToken
     }
   },
   mutations: {
@@ -63,6 +67,9 @@ export default createStore({
     },
     addPost: (state, post: Object) => {
       state.postList.push(post)
+    },
+    setImgToken: (state, token: string) => {
+      state.imgToken = token
     }
   },
   actions: {

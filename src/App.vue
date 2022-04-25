@@ -101,6 +101,12 @@
               <div>欢乐恶狗岛</div>
             </el-menu-item>
           </a>
+          <a href="https://wl.eosd.top/index.html" target="_blank">
+            <el-menu-item index="7" style="color: #63acb5">
+              <el-icon><location /></el-icon>
+              <div>钉幕石之音</div>
+            </el-menu-item>
+          </a>
         </el-menu>
       </el-aside>
       <el-main>
@@ -185,6 +191,12 @@
         <el-menu-item index="7" style="color: #63acb5">
           <el-icon><location /></el-icon>
           <div>欢乐恶狗岛</div>
+        </el-menu-item>
+      </a>
+      <a href="https://wl.eosd.top/index.html" target="_blank">
+        <el-menu-item index="7" style="color: #63acb5">
+          <el-icon><location /></el-icon>
+          <div>钉幕石之音</div>
         </el-menu-item>
       </a>
     </el-menu>
