@@ -25,7 +25,7 @@
         <div style="text-align: left">
           <el-upload
             class="upload-demo"
-            action="https://imgurl.org/upload/aws_s3"
+            action="https://www.imgurl.org/upload/aws_s3"
             multiple
             :on-success="
               (response) => {
