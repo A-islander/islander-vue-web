@@ -20,7 +20,8 @@
         <div style="text-align: left">
           <el-upload
             class="upload-demo"
-            action="https://www.imgurl.org/upload/aws_s3"
+            action="http://forum-api.islander.top/img/upload"
+            :headers="{ Authorization: authToken }"
             multiple
             :on-success="
               (response) => {
@@ -226,11 +227,19 @@ export default defineComponent({
       }
     };
     let getUploadInfo = (response: any) => {
-      postInput.mediaUrl.push({
-        id: response.id,
-        url: response.url,
-        thumbnailUrl: response.thumbnail_url,
-      });
+      if (response.data.success === true) {
+        postInput.mediaUrl.push({
+          id: response.data.RequestId,
+          url: response.data.data.url,
+          thumbnailUrl: response.data.data.url,
+        });
+      } else {
+        postInput.mediaUrl.push({
+          id: response.data.RequestId,
+          url: response.data.images,
+          thumbnailUrl: response.data.images,
+        });
+      }
     };
     let delUploadInfo = (file: any, uploadFiles: any) => {
       for (let i = 0; i < postInput.mediaUrl.length; i++) {
@@ -262,7 +271,9 @@ export default defineComponent({
       }
     });
     let userId = ref(store.getters.getUserId);
+    let authToken = store.getters.getAuthToken;
     return {
+      authToken,
       userId,
       getPlateData,
       plateId,
