@@ -131,6 +131,7 @@ import PostNode from "../components/PostNode.vue";
 import PostNodeHead from "../components/PostNodeHead.vue";
 import store from "../store";
 import emoji from "../assets/emoji";
+import { ElMessage } from "element-plus";
 
 export default defineComponent({
   name: "plate",
@@ -159,6 +160,10 @@ export default defineComponent({
     let postAdd = (str: string) => {
       postInput.value += str;
       drawInfo.status = false;
+      ElMessage({
+        type: "success",
+        message: "添加成功",
+      });
     };
     let plateId = ref();
     let plateData = reactive({

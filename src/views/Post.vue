@@ -128,6 +128,7 @@ import PostNode from "../components/PostNode.vue";
 import PostNodeHead from "../components/PostNodeHead.vue";
 import store from "../store";
 import emoji from "../assets/emoji";
+import { ElMessage } from "element-plus";
 
 export default defineComponent({
   components: {
@@ -154,6 +155,10 @@ export default defineComponent({
     let replyAdd = (str: string) => {
       replyInput.value += str;
       drawInfo.status = false;
+      ElMessage({
+        type: "success",
+        message: "添加成功",
+      });
     };
     let postId = ref();
     let pageRes = reactive({
