@@ -30,6 +30,7 @@
             "
             :on-remove="delUploadInfo"
             :limit="5"
+            ref="upload"
           >
             <el-button type="primary" color="#63acb5">
               <el-icon><film /></el-icon>
@@ -219,6 +220,8 @@ export default defineComponent({
           .then((response) => {
             if (response.data.code == 200) {
               getIndex(plateId, pageRes.page - 1, pageRes.size);
+              postInput.mediaUrl = [];
+              upload.value.clearFiles();
             } else if (response.data.code == 403) {
               alert("请领取饼干");
             } else if (response.data.code == 404) {
@@ -277,7 +280,9 @@ export default defineComponent({
     });
     let userId = ref(store.getters.getUserId);
     let authToken = store.getters.getAuthToken;
+    const upload: any = ref(null);
     return {
+      upload,
       authToken,
       userId,
       getPlateData,

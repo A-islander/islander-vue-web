@@ -101,7 +101,7 @@
               <div>欢乐恶狗岛</div>
             </el-menu-item>
           </a>
-          <a href="https://wl.eosd.top/index.html" target="_blank">
+          <a href="https://mszym.top/" target="_blank">
             <el-menu-item index="7" style="color: #63acb5">
               <el-icon><location /></el-icon>
               <div>钉幕石之音</div>
@@ -193,7 +193,7 @@
           <div>欢乐恶狗岛</div>
         </el-menu-item>
       </a>
-      <a href="https://wl.eosd.top/index.html" target="_blank">
+      <a href="https://mszym.top/" target="_blank">
         <el-menu-item index="7" style="color: #63acb5">
           <el-icon><location /></el-icon>
           <div>钉幕石之音</div>
