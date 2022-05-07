@@ -251,7 +251,7 @@ export default defineComponent({
     };
     let delUploadInfo = (file: any, uploadFiles: any) => {
       for (let i = 0; i < postInput.mediaUrl.length; i++) {
-        if (file.response.id === postInput.mediaUrl[i].id) {
+        if (file.response.data.RequestId === postInput.mediaUrl[i].id) {
           postInput.mediaUrl.splice(i, 1);
         }
       }

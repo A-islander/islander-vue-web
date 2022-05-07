@@ -53,7 +53,7 @@
         :key="index"
         class="card-reply"
       >
-        {{ item.name }}: {{ item.value }}
+        {{ item.name }}: {{ item.value }}<span v-if="item.mediaUrl != '[]'"> (查看图片)</span>
       </div>
       <slot name="reply-count"> </slot>
     </el-card>
@@ -61,7 +61,7 @@
 </template>
 <script lang="ts">
 import axios from "axios";
-import { defineComponent, provide, reactive, ref, toRefs, watch, h } from "vue";
+import { defineComponent, provide, reactive, ref, toRefs, watch } from "vue";
 import PostText from "./PostText.vue";
 import PostNodeHead from "./PostNodeHead.vue";
 import store from "../store";
@@ -144,12 +144,15 @@ export default defineComponent({
         if (response.data.data) {
           addMessage();
           (props.postNode as { sageAddCount: number }).sageAddCount += 1;
-          if(sageInfo.subStatus == 1) {
+          if (sageInfo.subStatus == 1) {
             (props.postNode as { sageSubCount: number }).sageSubCount -= 1;
             sageInfo.subStatus = 0;
           }
           sageInfo.addStatus = 1;
-        } else if (response.data.data !== undefined && response.data.data === false) {
+        } else if (
+          response.data.data !== undefined &&
+          response.data.data === false
+        ) {
           subMessage();
           (props.postNode as { sageAddCount: number }).sageAddCount -= 1;
           sageInfo.addStatus = 0;
@@ -169,12 +172,15 @@ export default defineComponent({
         if (response.data.data) {
           addMessage();
           (props.postNode as { sageSubCount: number }).sageSubCount += 1;
-          if(sageInfo.addStatus == 1) {
+          if (sageInfo.addStatus == 1) {
             (props.postNode as { sageAddCount: number }).sageAddCount -= 1;
             sageInfo.addStatus = 0;
           }
           sageInfo.subStatus = 1;
-        } else if (response.data.data !== undefined && response.data.data === false) {
+        } else if (
+          response.data.data !== undefined &&
+          response.data.data === false
+        ) {
           subMessage();
           (props.postNode as { sageSubCount: number }).sageSubCount -= 1;
           sageInfo.subStatus = 0;

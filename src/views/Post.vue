@@ -234,11 +234,13 @@ export default defineComponent({
       }
     };
     let delUploadInfo = (file: any, uploadFiles: any) => {
+      console.log(replyInput.mediaUrl);
       for (let i = 0; i < replyInput.mediaUrl.length; i++) {
-        if (file.response.id === replyInput.mediaUrl[i].id) {
+        if (file.response.data.RequestId === replyInput.mediaUrl[i].id) {
           replyInput.mediaUrl.splice(i, 1);
         }
       }
+      console.log(replyInput.mediaUrl);
     };
 
     getPost(postId.value, pageRes.page - 1, pageRes.size);
