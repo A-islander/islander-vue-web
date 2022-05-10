@@ -75,6 +75,7 @@
       v-for="(item, index) in res.list"
       :key="index"
       style="border: 10px solid white"
+      v-loading="loadingStatus"
     >
       <PostNode :postNode="item" :userId="userId">
         <template #post-head>
@@ -181,7 +182,9 @@ export default defineComponent({
     };
     const route = useRoute();
     postId.value = route.params.postId;
+    let loadingStatus = ref(false);
     let getPost = (postId: number, page: number, size: number) => {
+      loadingStatus.value = true;
       axios
         .get("forum/list?postId=" + postId + "&page=" + page + "&size=" + size)
         .then((response) => {
@@ -189,6 +192,10 @@ export default defineComponent({
           res.count = response.data.data.count;
           window.scrollTo(0, 0);
           getPlate();
+          loadingStatus.value = false;
+        })
+        .catch((error) => {
+          loadingStatus.value = false;
         });
     };
     let replyForumPost = (
@@ -254,6 +261,7 @@ export default defineComponent({
     let authToken = store.getters.getAuthToken;
     const upload: any = ref(null);
     return {
+      loadingStatus,
       upload,
       authToken,
       userId,

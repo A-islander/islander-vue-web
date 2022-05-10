@@ -71,7 +71,7 @@
     </el-row>
   </div>
   <div>
-    <div v-for="(item, index) in res.list" :key="index" class="plate-class">
+    <div v-for="(item, index) in res.list" :key="index" class="plate-class" v-loading="loadingStatus">
       <PostNode :postNode="item" :userId="userId">
         <template #post-head>
           <router-link :to="'/post/' + item.id">
@@ -179,8 +179,10 @@ export default defineComponent({
       page: 1,
       size: 20,
     });
+    let loadingStatus = ref(false);
     let getIndex = (plateId: number, page: number, size: number) => {
       if (Number(plateId) !== 0) {
+        loadingStatus.value = true;
         axios
           .get(
             "forum/index?plateId=" + plateId + "&page=" + page + "&size=" + size
@@ -189,6 +191,9 @@ export default defineComponent({
             res.list = response.data.data.list;
             res.count = response.data.data.count;
             window.scrollTo(0, 0);
+            loadingStatus.value = false;
+          }).catch((error) => {
+            loadingStatus.value = false;
           });
       } else {
         axios
@@ -284,6 +289,7 @@ export default defineComponent({
     let authToken = store.getters.getAuthToken;
     const upload: any = ref(null);
     return {
+      loadingStatus,
       upload,
       authToken,
       userId,

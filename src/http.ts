@@ -20,11 +20,11 @@ const startLoading = () => {
         lock: true,
         text: getLoadingStr(),
     }
-    loading = ElLoading.service(options)
+    // loading = ElLoading.service(options)
 }
 
 const endLoading = () => {
-    loading.close()
+    // loading.close()
 }
 
 // axios.defaults.baseURL = 'http://127.0.0.1:12345/'
