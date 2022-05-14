@@ -181,8 +181,8 @@ export default defineComponent({
     });
     let loadingStatus = ref(false);
     let getIndex = (plateId: number, page: number, size: number) => {
+      loadingStatus.value = true;
       if (Number(plateId) !== 0) {
-        loadingStatus.value = true;
         axios
           .get(
             "forum/index?plateId=" + plateId + "&page=" + page + "&size=" + size
@@ -202,6 +202,9 @@ export default defineComponent({
             res.list = response.data.data.list;
             res.count = response.data.data.count;
             window.scrollTo(0, 0);
+            loadingStatus.value = false;
+          }).catch((error) => {
+            loadingStatus.value = false;
           });
       }
     };
@@ -288,7 +291,9 @@ export default defineComponent({
     let userId = ref(store.getters.getUserId);
     let authToken = store.getters.getAuthToken;
     const upload: any = ref(null);
+    let load = () => {console.log("load")};
     return {
+      load,
       loadingStatus,
       upload,
       authToken,

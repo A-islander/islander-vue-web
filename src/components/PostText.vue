@@ -6,7 +6,7 @@ let textRender = (str: String | undefined) => {
   if (str === undefined) {
     str = "";
   }
-  let urlReg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-)+)|No.[0-9]+/g;
+  let urlReg = /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?|No.[0-9]+/g;
   let data = str.match(urlReg);
   let nodeArr = [];
   let start = 0; // 截取起点
