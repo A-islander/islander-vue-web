@@ -68,6 +68,12 @@
               <div>sage串展示</div>
             </el-menu-item>
           </router-link>
+          <a href="http://gitea.islander.top" target="_blank">
+            <el-menu-item index="3" style="color: #63acb5">
+              <el-icon><location /></el-icon>
+              <div>岛民hub</div>
+            </el-menu-item>
+          </a>
           <a href="https://github.com/A-islander/post-backup" target="_blank">
             <el-menu-item index="3" style="color: #63acb5">
               <el-icon><location /></el-icon>
@@ -95,7 +101,7 @@
               <div>bog岛</div>
             </el-menu-item>
           </a>
-          <a href="https://www.huanleegao.com" target="_blank">
+          <a href="https://huanleegao.com/t" target="_blank">
             <el-menu-item index="7" style="color: #63acb5">
               <el-icon><location /></el-icon>
               <div>欢乐恶狗岛</div>
@@ -146,7 +152,10 @@
           <span style="color: #63acb5">板块</span>
         </template>
         <div v-for="(item, index) in plateList" :key="index">
-          <router-link :to="'/plate/' + item.id" @click="mobileDrawerStatus = false">
+          <router-link
+            :to="'/plate/' + item.id"
+            @click="mobileDrawerStatus = false"
+          >
             <el-menu-item :index="'plate-' + item.id" style="color: #63acb5">
               <el-icon><guide /></el-icon>
               <div>{{ item.name }}</div>
@@ -160,6 +169,12 @@
           <div>sage串展示</div>
         </el-menu-item>
       </router-link>
+      <a href="http://gitea.islander.top" target="_blank">
+        <el-menu-item index="3" style="color: #63acb5">
+          <el-icon><location /></el-icon>
+          <div>岛民hub</div>
+        </el-menu-item>
+      </a>
       <a href="https://github.com/A-islander/post-backup" target="_blank">
         <el-menu-item index="3" style="color: #63acb5">
           <el-icon><location /></el-icon>
@@ -187,7 +202,7 @@
           <div>bog岛</div>
         </el-menu-item>
       </a>
-      <a href="https://www.huanleegao.com" target="_blank">
+      <a href="https://huanleegao.com/t" target="_blank">
         <el-menu-item index="7" style="color: #63acb5">
           <el-icon><location /></el-icon>
           <div>欢乐恶狗岛</div>
