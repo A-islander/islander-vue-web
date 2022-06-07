@@ -1,7 +1,7 @@
 <template>
   <div style="border: 10px solid white">
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/plate/' + plateData.id }">
+      <el-breadcrumb-item :to="{ path: '/plate/' + plateData.id + '/page/1' }">
         <div style="font-size: 20px; color: #63acb5; margin-bottom: 5px">
           {{ plateData.name }}
         </div>
@@ -124,7 +124,7 @@
 </template>
 <script lang="ts">
 import axios from "axios";
-import { defineComponent, ref, reactive, onMounted, watch } from "vue";
+import { defineComponent, ref, reactive, watch } from "vue";
 import { useRoute } from "vue-router";
 import PostNode from "../components/PostNode.vue";
 import PostNodeHead from "../components/PostNodeHead.vue";
@@ -182,6 +182,7 @@ export default defineComponent({
     };
     const route = useRoute();
     postId.value = route.params.postId;
+    pageRes.page = Number(route.params.page);
     let loadingStatus = ref(false);
     let getPost = (postId: number, page: number, size: number) => {
       loadingStatus.value = true;
@@ -251,12 +252,20 @@ export default defineComponent({
     };
 
     getPost(postId.value, pageRes.page - 1, pageRes.size);
-    onMounted(() => {});
     watch(pageRes, () => {
       let obj = document.getElementById("body-container") as HTMLInputElement;
       // obj.scrollTop = 0;
       getPost(postId.value, pageRes.page - 1, pageRes.size);
+      updateUrl(pageRes.page);
     });
+    let updateUrl = (page:number) => {
+      var url = window.location.href;
+      var arr = url.split("/");
+      arr.pop()
+      arr.push(String(page))
+      var newUrl = arr.join("/")
+      history.pushState("", "", newUrl)
+    }
     let userId = ref(store.getters.getUserId);
     let authToken = store.getters.getAuthToken;
     const upload: any = ref(null);

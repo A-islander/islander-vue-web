@@ -39,7 +39,7 @@
               <div>首页</div>
             </el-menu-item>
           </router-link>
-          <router-link :to="'/plate/' + 0">
+          <router-link :to="'/plate/0/page/1'">
             <el-menu-item :index="'plate-' + 0" style="color: #63acb5">
               <el-icon><guide /></el-icon>
               <div>时间线</div>
@@ -51,7 +51,7 @@
               <span style="color: #63acb5">板块</span>
             </template>
             <div v-for="(item, index) in plateList" :key="index">
-              <router-link :to="'/plate/' + item.id">
+              <router-link :to="'/plate/' + item.id + '/page/1'">
                 <el-menu-item
                   :index="'plate-' + item.id"
                   style="color: #63acb5"
@@ -140,7 +140,7 @@
           <div>首页</div>
         </el-menu-item>
       </router-link>
-      <router-link :to="'/plate/' + 0" @click="mobileDrawerStatus = false">
+      <router-link :to="'/plate/0/page/1'" @click="mobileDrawerStatus = false">
         <el-menu-item :index="'plate-' + 0" style="color: #63acb5">
           <el-icon><guide /></el-icon>
           <div>时间线</div>
@@ -153,7 +153,7 @@
         </template>
         <div v-for="(item, index) in plateList" :key="index">
           <router-link
-            :to="'/plate/' + item.id"
+            :to="'/plate/' + item.id + '/page/1'"
             @click="mobileDrawerStatus = false"
           >
             <el-menu-item :index="'plate-' + item.id" style="color: #63acb5">

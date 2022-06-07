@@ -74,7 +74,7 @@
     <div v-for="(item, index) in res.list" :key="index" class="plate-class" v-loading="loadingStatus">
       <PostNode :postNode="item" :userId="userId">
         <template #post-head>
-          <router-link :to="'/post/' + item.id">
+          <router-link :to="'/post/' + item.id + '/page/1'">
             <PostNodeHead :postNode="item">
               <template #post-head-tag v-if="plateId == 0">
                 {{ getPlateData(item.plateId).name }}
@@ -268,6 +268,7 @@ export default defineComponent({
     };
     const route = useRoute();
     plateId.value = route.params.plateId;
+    pageRes.page = Number(route.params.page);
     getIndex(plateId.value, pageRes.page - 1, pageRes.size);
     watch(plateId, () => {
       pageRes.page = 1;
@@ -275,6 +276,8 @@ export default defineComponent({
     });
     watch(pageRes, () => {
       getIndex(plateId.value, pageRes.page - 1, pageRes.size);
+      route.params.page = String(pageRes.page)
+      updateUrl(pageRes.page)
     });
     let getPlateData = store.getters.getPlateData;
     onUpdated(() => {
@@ -288,6 +291,14 @@ export default defineComponent({
         plateData.value = "就是时间线辣";
       }
     });
+    let updateUrl = (page:number) => {
+      var url = window.location.href;
+      var arr = url.split("/");
+      arr.pop()
+      arr.push(String(page))
+      var newUrl = arr.join("/")
+      history.pushState("", "", newUrl)
+    }
     let userId = ref(store.getters.getUserId);
     let authToken = store.getters.getAuthToken;
     const upload: any = ref(null);

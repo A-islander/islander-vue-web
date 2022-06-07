@@ -4,7 +4,7 @@ import Home from '../views/Home.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/plate/0',
+    redirect: '/plate/0/page/1',
   },
   {
     path: '/home',
@@ -23,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/post/:postId',
+    path: '/post/:postId/page/:page',
     name: 'Post',
     component: () => import('../views/Post.vue'),
     meta: {
@@ -31,7 +31,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/plate/:plateId',
+    path: '/plate/:plateId/page/:page',
     name: 'Plate',
     component: () => import('../views/Plate.vue'),
     meta: {
