@@ -18,6 +18,7 @@
       type="textarea"
       placeholder="来说点什么吧"
       style="padding-bottom: 5px"
+      @input="setInputBuff(Number(postId), replyInput.value)"
     >
     </el-input>
     <el-row>
@@ -138,6 +139,9 @@ export default defineComponent({
     PostNodeHead,
   },
   setup() {
+    let postId = ref();
+    const route = useRoute();
+    postId.value = route.params.postId;
     let drawInfo = reactive({
       status: false,
       direction: "rtl",
@@ -150,8 +154,18 @@ export default defineComponent({
       drawInfo.direction = "btt";
       drawInfo.size = "50%";
     }
+    let setInputBuff = (postId: number, str: string) => {
+      if (str.length > 0) {
+        localStorage.setItem("postInputBuff" + String(postId), str);
+      } else {
+        localStorage.removeItem("postInputBuff" + String(postId));
+      }
+    };
+    let getInputBuff = (postId: number) => {
+      return localStorage.getItem("postInputBuff" + String(postId));
+    };
     let replyInput = reactive({
-      value: "",
+      value: getInputBuff(Number(postId.value)),
       mediaUrl: [] as Array<{ id: string; url: string; thumbnailUrl: string }>,
     });
     let replyAdd = (str: string) => {
@@ -162,7 +176,6 @@ export default defineComponent({
         message: "添加成功",
       });
     };
-    let postId = ref();
     let pageRes = reactive({
       page: 1,
       size: 20,
@@ -180,8 +193,6 @@ export default defineComponent({
       plateData.name = data.name;
       plateData.id = data.id;
     };
-    const route = useRoute();
-    postId.value = route.params.postId;
     pageRes.page = Number(route.params.page);
     let loadingStatus = ref(false);
     let getPost = (postId: number, page: number, size: number) => {
@@ -258,14 +269,14 @@ export default defineComponent({
       getPost(postId.value, pageRes.page - 1, pageRes.size);
       updateUrl(pageRes.page);
     });
-    let updateUrl = (page:number) => {
+    let updateUrl = (page: number) => {
       var url = window.location.href;
       var arr = url.split("/");
-      arr.pop()
-      arr.push(String(page))
-      var newUrl = arr.join("/")
-      history.pushState("", "", newUrl)
-    }
+      arr.pop();
+      arr.push(String(page));
+      var newUrl = arr.join("/");
+      history.pushState("", "", newUrl);
+    };
     let userId = ref(store.getters.getUserId);
     let authToken = store.getters.getAuthToken;
     const upload: any = ref(null);
@@ -285,6 +296,7 @@ export default defineComponent({
       delUploadInfo,
       plateData,
       drawInfo,
+      setInputBuff,
     };
   },
 });

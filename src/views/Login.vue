@@ -5,6 +5,7 @@
     </div>
     <div style="font-size: 20px; color: #63acb5; margin-bottom: 5px">
       看看自己说了啥
+      <el-button @click="clearInputBuff()" size="small" type="primary" color="#63acb5"> 清除草稿 </el-button>
     </div>
     <el-card class="box-card">
       <template #header>
@@ -174,7 +175,7 @@ export default defineComponent({
             type: "success",
             message: "到达原串",
           });
-          router.push("/post/" + postId);
+          router.push("/post/" + postId + "/page/1");
         })
         .catch(() => {
           ElMessage({
@@ -207,6 +208,19 @@ export default defineComponent({
       // obj.scrollTop = 0;
       getUserPostList(pageRes.page - 1, pageRes.size);
     });
+    let clearInputBuff = () => {
+      console.log(localStorage);
+      for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        let index = key?.indexOf("InputBuff");
+        if (index != -1) {
+          if (key != null) {
+            localStorage.removeItem(key);
+          }
+        }
+        console.log(index);
+      }
+    };
     return {
       gotoPost,
       pageRes,
@@ -217,6 +231,7 @@ export default defineComponent({
       tokenStatus,
       getUserToken,
       changeToken,
+      clearInputBuff,
     };
   },
 });

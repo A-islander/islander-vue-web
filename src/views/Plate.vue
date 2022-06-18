@@ -13,6 +13,7 @@
       placeholder="来说点什么吧"
       style="padding-bottom: 5px"
       v-if="plateId != 0"
+      @input="setInputBuff(postInput.value)"
     >
     </el-input>
     <el-row v-if="plateId != 0">
@@ -71,7 +72,12 @@
     </el-row>
   </div>
   <div>
-    <div v-for="(item, index) in res.list" :key="index" class="plate-class" v-loading="loadingStatus">
+    <div
+      v-for="(item, index) in res.list"
+      :key="index"
+      class="plate-class"
+      v-loading="loadingStatus"
+    >
       <PostNode :postNode="item" :userId="userId">
         <template #post-head>
           <router-link :to="'/post/' + item.id + '/page/1'">
@@ -153,8 +159,18 @@ export default defineComponent({
       drawInfo.direction = "btt";
       drawInfo.size = "50%";
     }
+    let setInputBuff = (str: string) => {
+      if(str.length > 0) {
+        localStorage.setItem("plateInputBuff", str);
+      } else {
+        localStorage.removeItem("plateInputBuff")
+      }
+    };
+    let getInputBuff = () => {
+      return localStorage.getItem("plateInputBuff");
+    };
     let postInput = reactive({
-      value: "",
+      value: getInputBuff(),
       title: "",
       mediaUrl: [] as Array<{ id: string; url: string; thumbnailUrl: string }>,
     });
@@ -192,7 +208,8 @@ export default defineComponent({
             res.count = response.data.data.count;
             window.scrollTo(0, 0);
             loadingStatus.value = false;
-          }).catch((error) => {
+          })
+          .catch((error) => {
             loadingStatus.value = false;
           });
       } else {
@@ -203,7 +220,8 @@ export default defineComponent({
             res.count = response.data.data.count;
             window.scrollTo(0, 0);
             loadingStatus.value = false;
-          }).catch((error) => {
+          })
+          .catch((error) => {
             loadingStatus.value = false;
           });
       }
@@ -276,8 +294,8 @@ export default defineComponent({
     });
     watch(pageRes, () => {
       getIndex(plateId.value, pageRes.page - 1, pageRes.size);
-      route.params.page = String(pageRes.page)
-      updateUrl(pageRes.page)
+      route.params.page = String(pageRes.page);
+      updateUrl(pageRes.page);
     });
     let getPlateData = store.getters.getPlateData;
     onUpdated(() => {
@@ -291,18 +309,20 @@ export default defineComponent({
         plateData.value = "就是时间线辣";
       }
     });
-    let updateUrl = (page:number) => {
+    let updateUrl = (page: number) => {
       var url = window.location.href;
       var arr = url.split("/");
-      arr.pop()
-      arr.push(String(page))
-      var newUrl = arr.join("/")
-      history.pushState("", "", newUrl)
-    }
+      arr.pop();
+      arr.push(String(page));
+      var newUrl = arr.join("/");
+      history.pushState("", "", newUrl);
+    };
     let userId = ref(store.getters.getUserId);
     let authToken = store.getters.getAuthToken;
     const upload: any = ref(null);
-    let load = () => {console.log("load")};
+    let load = () => {
+      console.log("load");
+    };
     return {
       load,
       loadingStatus,
@@ -321,6 +341,7 @@ export default defineComponent({
       getUploadInfo,
       delUploadInfo,
       drawInfo,
+      setInputBuff,
     };
   },
 });
