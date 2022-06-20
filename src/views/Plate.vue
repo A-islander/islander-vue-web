@@ -160,14 +160,22 @@ export default defineComponent({
       drawInfo.size = "50%";
     }
     let setInputBuff = (str: string) => {
-      if(str.length > 0) {
+      if (str.length > 0) {
         localStorage.setItem("plateInputBuff", str);
       } else {
-        localStorage.removeItem("plateInputBuff")
+        removeInputBuff("plateInputBuff");
       }
     };
+    let removeInputBuff = (key: string) => {
+      localStorage.removeItem(key);
+    };
     let getInputBuff = () => {
-      return localStorage.getItem("plateInputBuff");
+      let str = localStorage.getItem("plateInputBuff");
+      if (str == null) {
+        return "";
+      } else {
+        return str;
+      }
     };
     let postInput = reactive({
       value: getInputBuff(),
@@ -175,6 +183,9 @@ export default defineComponent({
       mediaUrl: [] as Array<{ id: string; url: string; thumbnailUrl: string }>,
     });
     let postAdd = (str: string) => {
+      if (postInput.value == null) {
+        postInput.value = "";
+      }
       postInput.value += str;
       drawInfo.status = false;
       ElMessage({
@@ -255,6 +266,7 @@ export default defineComponent({
             }
             postInput.value = "";
             postInput.title = "";
+            removeInputBuff("plateInputBuff");
           });
       } else {
         alert("去选一下板块吧");

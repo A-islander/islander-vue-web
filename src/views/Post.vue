@@ -158,17 +158,28 @@ export default defineComponent({
       if (str.length > 0) {
         localStorage.setItem("postInputBuff" + String(postId), str);
       } else {
-        localStorage.removeItem("postInputBuff" + String(postId));
+        removeInputBuff("postInputBuff" + String(postId));
       }
     };
+    let removeInputBuff = (key: string) => {
+      localStorage.removeItem(key);
+    }
     let getInputBuff = (postId: number) => {
-      return localStorage.getItem("postInputBuff" + String(postId));
+      let str = localStorage.getItem("postInputBuff" + String(postId));
+      if (str == null) {
+        return ""
+      } else {
+        return str;
+      }
     };
     let replyInput = reactive({
       value: getInputBuff(Number(postId.value)),
       mediaUrl: [] as Array<{ id: string; url: string; thumbnailUrl: string }>,
     });
     let replyAdd = (str: string) => {
+      if (replyInput.value == null) {
+        replyInput.value = "";
+      }
       replyInput.value += str;
       drawInfo.status = false;
       ElMessage({
@@ -229,6 +240,7 @@ export default defineComponent({
             getPost(postId.value, pageRes.page - 1, pageRes.size);
             replyInput.value = "";
             replyInput.mediaUrl = [];
+            removeInputBuff("postInputBuff" + String(postId.value));
             upload.value.clearFiles();
           } else if (response.data.code == 403) {
             alert("请领取饼干");
