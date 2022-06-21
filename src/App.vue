@@ -89,6 +89,12 @@
               <div>接口文档</div>
             </el-menu-item>
           </a>
+          <a href="https://www.nmbxd.com" target="_blank">
+            <el-menu-item index="8" style="color: #63acb5">
+              <el-icon><location /></el-icon>
+              <div>x岛（三酱岛）</div>
+            </el-menu-item>
+          </a>
           <a href="https://www.naodong.fun" target="_blank">
             <el-menu-item index="5" style="color: #63acb5">
               <el-icon><location /></el-icon>
@@ -188,6 +194,12 @@
         <el-menu-item index="4" style="color: #63acb5">
           <el-icon><location /></el-icon>
           <div>接口文档</div>
+        </el-menu-item>
+      </a>
+      <a href="https://www.nmbxd.com" target="_blank">
+        <el-menu-item index="8" style="color: #63acb5">
+          <el-icon><location /></el-icon>
+          <div>x岛（三酱岛）</div>
         </el-menu-item>
       </a>
       <a href="https://www.naodong.fun" target="_blank">
