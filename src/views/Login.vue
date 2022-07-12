@@ -5,7 +5,14 @@
     </div>
     <div style="font-size: 20px; color: #63acb5; margin-bottom: 5px">
       看看自己说了啥
-      <el-button @click="clearInputBuff()" size="small" type="primary" color="#63acb5"> 清除草稿 </el-button>
+      <el-button
+        @click="clearInputBuff()"
+        size="small"
+        type="primary"
+        color="#63acb5"
+      >
+        清除草稿
+      </el-button>
     </div>
     <el-card class="box-card">
       <template #header>
@@ -40,14 +47,18 @@
     </el-card>
     <div v-for="(item, index) in userPostList.list" :key="index">
       <br />
-      <PostNode
-        :postNode="item"
-        :userId="res.id"
-        @click="
-          if (item.followId !== 0) gotoPost(item.followId);
-          else gotoPost(item.id);
-        "
-      ></PostNode>
+      <PostNode :postNode="item" :userId="res.id">
+        <template #post-head>
+          <div
+            @click="
+              if (item.followId !== 0) gotoPost(item.followId);
+              else gotoPost(item.id);
+            "
+          >
+            <PostNodeHead :postNode="item" />
+          </div>
+        </template>
+      </PostNode>
     </div>
 
     <el-pagination
@@ -68,11 +79,13 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { useRouter } from "vue-router";
 import store from "../store";
 import PostNode from "../components/PostNode.vue";
+import PostNodeHead from "../components/PostNodeHead.vue";
 
 export default defineComponent({
   name: "login",
   components: {
     PostNode,
+    PostNodeHead,
   },
   setup() {
     let userPostList = reactive({

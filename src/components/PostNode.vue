@@ -26,6 +26,12 @@
         </div>
         <slot name="sage-name"> </slot>
         <div style="text-align: right; font-size: 10px; color: #63acb5">
+          <div v-if="deleteStatus" @click="deletePost(postNode.id)">
+            删除我的串
+          </div>
+          <div v-if="recoverStatus" @click="recoverPost(postNode.id)">
+            恢复我的串
+          </div>
           <div>
             <el-popconfirm
               :title="sageInfo.addInfo"
@@ -53,7 +59,8 @@
         :key="index"
         class="card-reply"
       >
-        {{ item.name }}: {{ item.value }}<span v-if="item.mediaUrl != '[]'"> (查看图片)</span>
+        {{ item.name }}: {{ item.value
+        }}<span v-if="item.mediaUrl != '[]'"> (查看图片)</span>
       </div>
       <slot name="reply-count"> </slot>
     </el-card>
@@ -61,7 +68,15 @@
 </template>
 <script lang="ts">
 import axios from "axios";
-import { defineComponent, provide, reactive, ref, toRefs, watch } from "vue";
+import {
+  defineComponent,
+  provide,
+  reactive,
+  ref,
+  toRefs,
+  watch,
+  Ref,
+} from "vue";
 import PostText from "./PostText.vue";
 import PostNodeHead from "./PostNodeHead.vue";
 import store from "../store";
@@ -187,9 +202,52 @@ export default defineComponent({
         }
       });
     };
+    let deleteMessage = () => {
+      ElMessage({
+        message: "删除成功",
+        type: "success",
+      });
+    };
+    let recoverMessage = () => {
+      ElMessage({
+        message: "恢复成功",
+        type: "success",
+      });
+    };
+    let deleteStatus: Ref<boolean> = ref(
+      props.userId == props.postNode?.userId && props.postNode?.status == 0
+    );
+    let recoverStatus: Ref<boolean> = ref(
+      props.userId == props.postNode?.userId && props.postNode?.status == 2
+    );
+    // 删除帖子
+    let deletePost = (postId: number) => {
+      axios.defaults.headers.common["Authorization"] =
+        store.getters.getAuthToken;
+      axios.get("forum/delete/ownPost?postId=" + postId).then((response) => {
+        if (response.data.data.status == true) {
+          deleteStatus.value = false;
+          recoverStatus.value = true;
+          deleteMessage();
+        }
+      });
+    };
+    // 恢复帖子
+    let recoverPost = (postId: number) => {
+      axios.defaults.headers.common["Authorization"] =
+        store.getters.getAuthToken;
+      axios.get("forum/recover/ownPost?postId=" + postId).then((response) => {
+        if (response.data.data.status == true) {
+          deleteStatus.value = true;
+          recoverStatus.value = false;
+          recoverMessage();
+        }
+      });
+    };
     watch(props, () => {
       getMediaUrl();
     });
+    let userId = props.userId;
     return {
       sageInfo,
       ...toRefs(props),
@@ -198,6 +256,11 @@ export default defineComponent({
       ...toRefs(res),
       getPostNode,
       mediaUrl,
+      userId,
+      deletePost,
+      recoverPost,
+      deleteStatus,
+      recoverStatus,
     };
   },
 });
