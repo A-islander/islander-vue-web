@@ -27,9 +27,12 @@ jobs:
         npm run build
         ls dist/
 
-    - name: Deployment
-    - uses: up9cloud/action-rsync@master
+    - name: Deploy
+      uses: up9cloud/action-rsync@master
       env:
+        USER: ${{secrets.RSYNC_USER}}
         HOST: ${{secrets.RSYNC_HOST}}
         KEY: ${{secrets.RSYNC_KEY}}
+        SOURCE: ./dist
+        ARGS: -av --delete
         TARGET: ${{secrets.RSYNC_DIR}}
