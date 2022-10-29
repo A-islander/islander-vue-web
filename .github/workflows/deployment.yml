@@ -26,9 +26,9 @@ jobs:
         npm install
         npm run build
         ls dist/
-        cd dist/
 
     - name: Deploy
+      run: cd dist/
       uses: up9cloud/action-rsync@master
       env:
         USER: ${{secrets.RSYNC_USER}}
