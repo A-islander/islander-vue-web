@@ -28,12 +28,11 @@ jobs:
         ls dist/
 
     - name: Deploy
-      run: cd dist/
       uses: up9cloud/action-rsync@master
       env:
         USER: ${{secrets.RSYNC_USER}}
         HOST: ${{secrets.RSYNC_HOST}}
         KEY: ${{secrets.RSYNC_KEY}}
         ARGS: -av --delete
-        SOURCE: ./
+        SOURCE: ./dist/
         TARGET: ${{secrets.RSYNC_DIR}}
