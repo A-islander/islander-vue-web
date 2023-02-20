@@ -217,6 +217,15 @@ export default defineComponent({
           .then((response) => {
             res.list = response.data.data.list;
             res.count = response.data.data.count;
+            
+            // 拼接省略字符串
+            for (let i = 0; i < res.list.length; i++) {
+              for (let j = 0; j < (res.list[i] as any).lastReplyArr.length; j++) {
+                if ((res.list[i] as any).lastReplyArr[j].value.length > 20) {
+                  (res.list[i] as any).lastReplyArr[j].value = (res.list[i] as any).lastReplyArr[j].value.slice(0,20)+"...";
+                }
+              }
+            }
             window.scrollTo(0, 0);
             loadingStatus.value = false;
           })
@@ -229,6 +238,15 @@ export default defineComponent({
           .then((response) => {
             res.list = response.data.data.list;
             res.count = response.data.data.count;
+
+            // 拼接省略字符串
+            for (let i = 0; i < res.list.length; i++) {
+              for (let j = 0; j < (res.list[i] as any).lastReplyArr.length; j++) {
+                if ((res.list[i] as any).lastReplyArr[j].value.length > 20) {
+                  (res.list[i] as any).lastReplyArr[j].value = (res.list[i] as any).lastReplyArr[j].value.slice(0,20)+"...";
+                }
+              }
+            }
             window.scrollTo(0, 0);
             loadingStatus.value = false;
           })
