@@ -7,6 +7,7 @@
       {{ plateData.value }}
     </div>
     <el-input
+      id="plate-input"
       v-model="postInput.value"
       :autosize="{ minRows: 2, maxRows: 4 }"
       type="textarea"
@@ -183,10 +184,18 @@ export default defineComponent({
       mediaUrl: [] as Array<{ id: string; url: string; thumbnailUrl: string }>,
     });
     let postAdd = (str: string) => {
+      const input = document.getElementById("plate-input");
+      let inputStart = 0;
+      if (input != null) {
+        inputStart = (input as any).selectionStart;
+      }
       if (postInput.value == null) {
         postInput.value = "";
       }
-      postInput.value += str;
+      postInput.value =
+        postInput.value.slice(0, inputStart) +
+        str +
+        postInput.value.slice(inputStart);
       drawInfo.status = false;
       ElMessage({
         type: "success",
@@ -217,12 +226,18 @@ export default defineComponent({
           .then((response) => {
             res.list = response.data.data.list;
             res.count = response.data.data.count;
-            
+
             // 拼接省略字符串
             for (let i = 0; i < res.list.length; i++) {
-              for (let j = 0; j < (res.list[i] as any).lastReplyArr.length; j++) {
+              for (
+                let j = 0;
+                j < (res.list[i] as any).lastReplyArr.length;
+                j++
+              ) {
                 if ((res.list[i] as any).lastReplyArr[j].value.length > 20) {
-                  (res.list[i] as any).lastReplyArr[j].value = (res.list[i] as any).lastReplyArr[j].value.slice(0,20)+"...";
+                  (res.list[i] as any).lastReplyArr[j].value =
+                    (res.list[i] as any).lastReplyArr[j].value.slice(0, 20) +
+                    "...";
                 }
               }
             }
@@ -241,9 +256,15 @@ export default defineComponent({
 
             // 拼接省略字符串
             for (let i = 0; i < res.list.length; i++) {
-              for (let j = 0; j < (res.list[i] as any).lastReplyArr.length; j++) {
+              for (
+                let j = 0;
+                j < (res.list[i] as any).lastReplyArr.length;
+                j++
+              ) {
                 if ((res.list[i] as any).lastReplyArr[j].value.length > 20) {
-                  (res.list[i] as any).lastReplyArr[j].value = (res.list[i] as any).lastReplyArr[j].value.slice(0,20)+"...";
+                  (res.list[i] as any).lastReplyArr[j].value =
+                    (res.list[i] as any).lastReplyArr[j].value.slice(0, 20) +
+                    "...";
                 }
               }
             }
