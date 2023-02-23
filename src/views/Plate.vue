@@ -184,7 +184,7 @@ export default defineComponent({
       mediaUrl: [] as Array<{ id: string; url: string; thumbnailUrl: string }>,
     });
     let postAdd = (str: string) => {
-      const input = document.getElementById("plate-input");
+      let input = document.getElementById("plate-input");
       let inputStart = 0;
       if (input != null) {
         inputStart = (input as any).selectionStart;

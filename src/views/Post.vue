@@ -13,6 +13,7 @@
       </el-breadcrumb-item>
     </el-breadcrumb>
     <el-input
+      id="reply-input"
       v-model="replyInput.value"
       :autosize="{ minRows: 2, maxRows: 4 }"
       type="textarea"
@@ -163,11 +164,11 @@ export default defineComponent({
     };
     let removeInputBuff = (key: string) => {
       localStorage.removeItem(key);
-    }
+    };
     let getInputBuff = (postId: number) => {
       let str = localStorage.getItem("postInputBuff" + String(postId));
       if (str == null) {
-        return ""
+        return "";
       } else {
         return str;
       }
@@ -177,10 +178,18 @@ export default defineComponent({
       mediaUrl: [] as Array<{ id: string; url: string; thumbnailUrl: string }>,
     });
     let replyAdd = (str: string) => {
+      let input = document.getElementById("reply-input");
+      let inputStart = 0;
+      if (input != null) {
+        inputStart = (input as any).selectionStart;
+      }
       if (replyInput.value == null) {
         replyInput.value = "";
       }
-      replyInput.value += str;
+      replyInput.value =
+        replyInput.value.slice(0, inputStart) +
+        str +
+        replyInput.value.slice(inputStart);
       drawInfo.status = false;
       ElMessage({
         type: "success",
