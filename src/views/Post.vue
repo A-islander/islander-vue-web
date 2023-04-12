@@ -64,6 +64,7 @@
                 replyForumPost(postId, replyInput.value, replyInput.mediaUrl)
               "
               color="#63acb5"
+              :loading="postingStatus"
             >
               回复
             </el-button>
@@ -230,11 +231,13 @@ export default defineComponent({
           loadingStatus.value = false;
         });
     };
+    let postingStatus = ref(false);
     let replyForumPost = (
       followId: number,
       value: string,
       mediaUrl: Array<{ id: string; url: string; thumbnailUrl: string }>
     ) => {
+      postingStatus.value = true;
       axios.defaults.headers.common["Authorization"] =
         store.getters.getAuthToken;
       axios
@@ -256,6 +259,7 @@ export default defineComponent({
           } else if (response.data.code == 404) {
             alert("总得说点什么吧");
           }
+          postingStatus.value = false;
         });
     };
     let getUploadInfo = (response: any) => {
@@ -318,6 +322,7 @@ export default defineComponent({
       plateData,
       drawInfo,
       setInputBuff,
+      postingStatus,
     };
   },
 });

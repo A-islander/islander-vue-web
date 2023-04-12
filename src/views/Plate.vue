@@ -64,6 +64,7 @@
                 )
               "
               color="#63acb5"
+              :loading="postingStatus"
             >
               回复
             </el-button>
@@ -276,6 +277,7 @@ export default defineComponent({
           });
       }
     };
+    let postingStatus = ref(false);
     let postForumPost = (
       plateId: number,
       value: string,
@@ -283,6 +285,7 @@ export default defineComponent({
       mediaUrl: Array<{ id: string; url: string; thumbnailUrl: string }>
     ) => {
       if (plateId != 0) {
+        postingStatus.value = true;
         axios.defaults.headers.common["Authorization"] =
           store.getters.getAuthToken;
         axios
@@ -306,6 +309,7 @@ export default defineComponent({
             postInput.value = "";
             postInput.title = "";
             removeInputBuff("plateInputBuff");
+            postingStatus.value = false
           });
       } else {
         alert("去选一下板块吧");
@@ -393,6 +397,7 @@ export default defineComponent({
       delUploadInfo,
       drawInfo,
       setInputBuff,
+      postingStatus,
     };
   },
 });
