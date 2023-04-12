@@ -31,7 +31,7 @@
           :collapse="false"
         >
           <div>
-            <img alt="Vue logo" src="./assets/logo.png" style="width: 100%" />
+            <img alt="Vue logo" src="./assets/logo.jpg" style="width: 100%" />
           </div>
           <router-link to="/home">
             <el-menu-item index="1" style="color: #63acb5">

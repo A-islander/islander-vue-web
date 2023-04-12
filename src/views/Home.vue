@@ -1,7 +1,7 @@
 <template>
   <div class="home" style="margin-left: 20px; margin-right: 20px;">
     <div style="margin: 0 auto">
-      <img alt="Vue logo" src="../assets/logo.png" style="width: 100%" v-if="mobileStatus"/>
+      <img alt="Vue logo" src="../assets/logo.jpg" style="width: 100%" v-if="mobileStatus"/>
     </div>
     <div>
       <div style="font-size: 40px; color: #63acb5">欢迎来到岛民岛</div>
