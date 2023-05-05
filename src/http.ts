@@ -42,7 +42,7 @@ axios.interceptors.response.use((response: AxiosResponse<any>) => {
     endLoading()
     if (response.data.code == 403) {
         alert("没有饼干！！！")
-    } else if (response.data.code == 439) {
+    } else if (response.data.code == 429) {
         alert("访问太快啦！！！")
     }
     return response
