@@ -31,7 +31,8 @@
           :collapse="false"
         >
           <div>
-            <img alt="Vue logo" src="./assets/logo.jpg" style="width: 100%" />
+            <!-- <img alt="Vue logo" src="./assets/logo.jpg" style="width: 100%" /> -->
+            <img alt="Vue logo" src="https://island-image.oss-cn-beijing.aliyuncs.com/banner/k4zb5lu_10.jpg" style="width: 100%" />
           </div>
           <router-link to="/home">
             <el-menu-item index="1" style="color: #63acb5">
@@ -140,6 +141,9 @@
       :collapse="false"
       style="border-right: 0"
     >
+      <div>
+        <img alt="Vue logo" src="https://island-image.oss-cn-beijing.aliyuncs.com/banner/k4zb5lu_10.jpg" style="width: 100%" />
+      </div>
       <router-link to="/home" @click="mobileDrawerStatus = false">
         <el-menu-item index="1" style="color: #63acb5">
           <el-icon><house /></el-icon>
