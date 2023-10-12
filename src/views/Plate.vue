@@ -22,7 +22,7 @@
         <div style="text-align: left">
           <el-upload
             class="upload-demo"
-            action="http://forum-api.islander.top/img/upload"
+            action="https://forum-api.islander.top/img/upload"
             :headers="{ Authorization: authToken }"
             multiple
             :on-success="

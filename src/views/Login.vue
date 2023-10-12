@@ -108,7 +108,7 @@ export default defineComponent({
     let inputToken = ref(token.value);
     let getUserToken = () => {
       // 注册饼干
-      axios.defaults.baseURL = "http://user-api.islander.top/";
+      axios.defaults.baseURL = "https://user-api.islander.top/";
       axios.get("user/register").then((response) => {
         store.commit("setAuthToken", response.data.data.token);
         token.value = response.data.data.token;
@@ -120,11 +120,11 @@ export default defineComponent({
           message: "饼干获取成功",
         });
       });
-      axios.defaults.baseURL = "http://forum-api.islander.top/";
+      axios.defaults.baseURL = "https://forum-api.islander.top/";
     };
     let getUserInfo = () => {
       // 获取用户信息
-      axios.defaults.baseURL = "http://user-api.islander.top/";
+      axios.defaults.baseURL = "https://user-api.islander.top/";
       axios.defaults.headers.common["Authorization"] = token.value;
       axios.get("user/get").then((response) => {
         if (response.data.code != 200) {
@@ -144,7 +144,7 @@ export default defineComponent({
           tokenStatus.value = true;
         }
       });
-      axios.defaults.baseURL = "http://forum-api.islander.top/";
+      axios.defaults.baseURL = "https://forum-api.islander.top/";
     };
     let getUserPostList = (page: number, size: number) => {
       axios.defaults.headers.common["Authorization"] = token.value;

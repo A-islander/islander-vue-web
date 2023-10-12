@@ -28,7 +28,7 @@ const endLoading = () => {
 }
 
 // axios.defaults.baseURL = 'http://127.0.0.1:12345/'
-axios.defaults.baseURL = 'http://forum-api.islander.top/'
+axios.defaults.baseURL = 'https://forum-api.islander.top/'
 // axios.defaults.headers.common['Authorization'] = store.getters.getAuthToken
 
 // 请求拦截
